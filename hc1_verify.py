@@ -190,7 +190,6 @@ elif args.use_verifier or args.use_verifier_url:
     payload = b64decode(pkg['payload'])
     trustlist = json.loads(payload)
     eulist = trustlist['eu_keys']
-    print(eulist)
     for kid_b64 in eulist:
         add_kid(kid_b64,eulist[kid_b64][0]['subjectPk'])
 
