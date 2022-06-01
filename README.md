@@ -23,7 +23,7 @@ convert it for use in a QR.
 
 ### Decoding a barcode from production (i.e. a DCC in the wild)
 
-run working_test.sh with zbarimg installed and an image of a QR code to test
+run working_test_verify.sh with zbarimg installed and an image of a QR code to test
 
 The first will check against the Dutch copy of the eHealth trustlist; the second version, with the -i, will not check the actual signature. The typical output will look like:
 
