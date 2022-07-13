@@ -1,39 +1,68 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
+from wtforms.widgets import TextArea
 import json
+from keys_and_signscript.hc1_sign import sign
 
 app = Flask(__name__)
-
+example="""{
+    "dob": "1990-05-05",
+    "nam": {
+        "fn": "Mustermann",
+        "fnt": "MUSTERMANN",
+        "gn": "Max",
+        "gnt": "MAX"
+    },
+    "v": [
+        {
+            "ci": "dieser_string_ist_unique_123",
+            "co": "DE",
+            "dn": 3,
+            "dt": "2000-01-01",
+            "is": "Robert Koch-Institut",
+            "ma": "ORG-100030215",
+            "mp": "EU/1/20/1528",
+            "sd": 3,
+            "tg": "840539006",
+            "vp": "1119349007"
+        }
+    ],
+    "ver": "1.3.3.7"
+}"""
 #CSRF Token
 app.config["SECRET_KEY"] = "2bMYYLmd-EvD1PsDm-cssKJp3p-ZK8exToo-1WMVEewm-`uBrMvMY-Kr\a4t3I-FD6mTVbZ-oxY5uBTA"
 
 #Zertifikat Input Form
 class ZertForm(FlaskForm):
-    inputdata = StringField("Paylaod",validators=[DataRequired()])
+    inputdata = TextAreaField("Payload",validators=[DataRequired()],widget=TextArea())
     submit = SubmitField("Zertifikat erstellen")
 
 
-#DSA Key bereitstellung
-@app.route("/dsa_keys")
-def dsa_keys():
-    with open("db.json", "rb") as file:
-        dsa_keys = file.read()
-    dsa_json=json.loads(dsa_keys)
-    return dsa_json
 
 #Seite zum Erstellen von Zertifikaten
 @app.route('/create_digital_hcert',methods=["GET","POST"])
 def create_digital_hcert():
     inputdata = None
-    form = ZertForm()
+    form = ZertForm(inputdata=example)
     if form.validate_on_submit():
         inputdata = form.inputdata.data
-        form.inputdata.data=None 
+        form.inputdata.data=None
+        return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
                            inputdata=inputdata,
                            form = form)
+
+
+#DSA Key bereitstellung
+@app.route("/dsa_keys")
+def dsa_keys():
+    with open("keys_and_signscript/db.json", "rb") as file:
+        dsa_keys = file.read()
+    dsa_json=json.loads(dsa_keys)
+    return dsa_json
+
 
 #Index
 @app.route('/')

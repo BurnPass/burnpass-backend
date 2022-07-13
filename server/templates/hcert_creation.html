@@ -1,12 +1,8 @@
-{% if inputdata %}
-	<h1>sucess</h1>
-{% else %}
-	<h1> digitales Impfzertifikat Ausstellfomular</h1> 
-	<br/>
-	<form method = "POST">
-	{{ form.hidden_tag() }}
-	{{ form.inputdata.label}}
-	{{ form.inputdata() }}
-	<br/> <br/>
-	{{ form.submit() }}
-{% endif %}
+<h1> digitales Impfzertifikat Ausstellfomular</h1> 
+<br/>
+<form method = "POST">
+{{ form.hidden_tag() }}
+{{ form.inputdata.label}}
+{{ form.inputdata(cols="70", rows="30") }}
+<br/> <br/>
+{{ form.submit() }}
