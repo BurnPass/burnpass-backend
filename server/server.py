@@ -1,10 +1,12 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
 import json
 from keys_and_signscript.hc1_sign import sign
+import io
+import qrcode
 
 app = Flask(__name__)
 example="""{
@@ -31,6 +33,19 @@ example="""{
     ],
     "ver": "1.3.3.7"
 }"""
+
+#QR-Image generation
+def generate_qrimage(cert_string: str):
+    # genereate matplotlib image
+    image = qrcode.make(cert_string,error_correction=qrcode.constants.ERROR_CORRECT_Q)
+
+    # create PNG image in memory
+    img = io.BytesIO()              # create file-like object in memory to save image without using disk
+    image.save(img, format='png')  # save image in file-like object
+    img.seek(0)                     # move to beginning of file-like object to read it later
+
+    return img
+
 #CSRF Token
 app.config["SECRET_KEY"] = "2bMYYLmd-EvD1PsDm-cssKJp3p-ZK8exToo-1WMVEewm-`uBrMvMY-Kr\a4t3I-FD6mTVbZ-oxY5uBTA"
 
@@ -49,7 +64,9 @@ def create_digital_hcert():
     if form.validate_on_submit():
         inputdata = form.inputdata.data
         form.inputdata.data=None
-        return "SUCCESS: \n" + str(sign(str(inputdata)))
+        img = generate_qrimage(sign(str(inputdata)))
+        return send_file(img, 'file.png')
+        #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
                            inputdata=inputdata,
                            form = form)
