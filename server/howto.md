@@ -15,3 +15,4 @@ Starten des Servers
 ./start_server.sh
 ```
 
+Server braucht zum Prüfen mind. zwei Threads da sonst beim Prüfen nicht gleichzeit auch der Key zur Verfügung gestellt werden kann
