@@ -1,13 +1,16 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
 import json
 from keys_and_signscript.hc1_sign import sign
+from hc1_verify import verify
 import io
 import qrcode
+from pyzbar.pyzbar import decode
+from PIL import Image
 
 app = Flask(__name__)
 example="""{
@@ -66,7 +69,7 @@ def create_digital_hcert():
         inputdata = form.inputdata.data
         form.inputdata.data=None
         img = generate_qrimage(sign(str(inputdata)))
-        return send_file(img, 'file.png')
+        return send_file(img, 'file.png', as_attachment=True, attachment_filename='HCERT')
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
                            inputdata=inputdata,
@@ -86,6 +89,26 @@ def dsa_keys():
 @app.route('/')
 def index():
     return render_template("index.html")
+
+#====================image upload test=============================
+@app.route('/form')
+def form():
+    return render_template('form.html')
+
+@app.route('/upload', methods = ['POST', 'GET'])
+def upload():
+    if request.method == 'POST':
+        f = request.files['file']
+        image = Image.open(f)
+        data = decode(image)
+        if len(data)==0:
+            return "No QR detected"
+        else:
+            payload=(data[0].data)
+            valid = verify(payload,"http://localhost:8000/dsa_keys")
+            return valid
+    else:
+        return "No image selected"
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

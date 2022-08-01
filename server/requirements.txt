@@ -9,4 +9,5 @@ qrcode
 flask
 gunicorn
 flask-wtf
-
+pyzbar
+pillow
