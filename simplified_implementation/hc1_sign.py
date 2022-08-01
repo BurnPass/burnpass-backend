@@ -1,4 +1,4 @@
-#!env python3.8
+#!env python3
 import sys
 import zlib
 import argparse

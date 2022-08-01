@@ -1,3 +1,5 @@
+#!env python3
+
 import json
 from base64 import b64encode
 from cryptography import x509

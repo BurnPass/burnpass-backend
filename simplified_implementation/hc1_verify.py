@@ -1,4 +1,4 @@
-#!env python3.8
+#!env python3
 
 import argparse
 import json
@@ -147,6 +147,7 @@ else:
               if cin.startswith(':'):
                   cin = cin[1:]
 
+        print(cin)
         cin = b45decode(cin)
 
 if not args.skip_zlib:

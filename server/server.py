@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from flask import Flask, render_template, send_file
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
@@ -87,4 +88,5 @@ def index():
     return render_template("index.html")
     
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000 ,debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
+

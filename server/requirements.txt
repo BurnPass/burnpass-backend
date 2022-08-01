@@ -1,3 +1,12 @@
+base45
+cbor2
+cose
+cryptography
+segno
+ujson
+qrcode
+
 flask
 gunicorn
 flask-wtf
+
