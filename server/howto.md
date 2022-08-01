@@ -12,7 +12,6 @@ Starten des Servers
 ===================
 
 ```
-pip install -r requirements.txt
 ./start_server.sh
 ```
 
