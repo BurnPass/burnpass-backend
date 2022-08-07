@@ -11,6 +11,7 @@ import io
 import qrcode
 from pyzbar.pyzbar import decode
 from PIL import Image
+from random import randint
 
 app = Flask(__name__)
 example="""{
@@ -69,7 +70,7 @@ def create_digital_hcert():
         inputdata = form.inputdata.data
         form.inputdata.data=None
         img = generate_qrimage(sign(str(inputdata)))
-        return send_file(img, 'file.png', as_attachment=True, attachment_filename='HCERT')
+        return send_file(img, 'file.png', as_attachment=True, attachment_filename='HCERT'+str(randint(10000,99999)))
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
                            inputdata=inputdata,
@@ -90,10 +91,10 @@ def dsa_keys():
 def index():
     return render_template("index.html")
 
-#====================image upload test=============================
-@app.route('/form')
+#verfication of hcert by image with qr
+@app.route('/verifyqr')
 def form():
-    return render_template('form.html')
+    return render_template('verifyqr.html')
 
 @app.route('/upload', methods = ['POST', 'GET'])
 def upload():
@@ -109,7 +110,69 @@ def upload():
             return valid
     else:
         return "No image selected"
-    
+
+#======================start valueset index======================================
+@app.route("/valuesets/")
+def valuesetindex():
+    return render_template("valuesets.html")
+
+
+@app.route("/valuesets/country-2-codes")
+def country2codes():
+    with open("valuesets/country-2-codes.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/disease-agent-targeted")
+def diseaseagenttargeted():
+    with open("valuesets/disease-agent-targeted.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/test-manf")
+def testmanf():
+    with open("valuesets/test-manf.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/test-result")
+def testresult():
+    with open("valuesets/test-result.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/test-type")
+def testtype():
+    with open("valuesets/test-type.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/vaccine-mah-manf")
+def vaccinemahmanf():
+    with open("valuesets/vaccine-mah-manf.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/vaccine-medicinal-product")
+def vaccinemedicinalproduct():
+    with open("valuesets/vaccine-medicinal-product.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/vaccine-prophylaxis")
+def vaccineprophylaxis():
+    with open("valuesets/vaccine-prophylaxis.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+@app.route("/valuesets/valueset")
+def valueset():
+    with open("valuesets/valueset.json", "rb") as file:
+        datei = file.read()
+    return json.loads(datei)
+
+#======================end valueset index======================================
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
 
