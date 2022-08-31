@@ -128,4 +128,4 @@ def verify(cin, url):
 
         payload = json.dumps(payload, indent=4, sort_keys=True, default=json_serial, ensure_ascii=False)
 
-        return "Signature valid"
+        return "Signature valid with KID: "+str(given_kid_b64)
