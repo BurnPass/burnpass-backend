@@ -12,6 +12,7 @@ import qrcode
 from pyzbar.pyzbar import decode
 from PIL import Image
 from random import randint
+import inspect, sys
 
 app = Flask(__name__)
 example="""{
@@ -114,59 +115,68 @@ def upload():
 #======================start valueset index======================================
 @app.route("/valuesets/")
 def valuesetindex():
+    print("queried", inspect.stack()[0][3])
     return render_template("valuesets.html")
-
 
 @app.route("/valuesets/country-2-codes")
 def country2codes():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/country-2-codes.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/disease-agent-targeted")
 def diseaseagenttargeted():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/disease-agent-targeted.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/test-manf")
 def testmanf():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/test-manf.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/test-result")
 def testresult():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/test-result.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/test-type")
 def testtype():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/test-type.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/vaccine-mah-manf")
 def vaccinemahmanf():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/vaccine-mah-manf.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/vaccine-medicinal-product")
 def vaccinemedicinalproduct():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/vaccine-medicinal-product.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/vaccine-prophylaxis")
 def vaccineprophylaxis():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/vaccine-prophylaxis.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
 
 @app.route("/valuesets/valueset")
 def valueset():
+    print("queried", inspect.stack()[0][3])
     with open("valuesets/valueset.json", "rb") as file:
         datei = file.read()
     return json.loads(datei)
