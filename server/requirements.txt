@@ -7,6 +7,7 @@ ujson
 qrcode
 
 flask
+Flask-JSON
 gunicorn
 flask-wtf
 pyzbar
