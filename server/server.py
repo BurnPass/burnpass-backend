@@ -12,9 +12,16 @@ import qrcode
 from pyzbar.pyzbar import decode
 from PIL import Image
 from random import randint
+import requests
 import inspect, sys
+from flask_json import FlaskJSON, as_json
 
 app = Flask(__name__)
+#config für json
+json = FlaskJSON(app)
+app.config['JSON_AS_ASCII'] = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
 example="""{
     "dob": "1990-05-05",
     "nam": {
@@ -40,6 +47,9 @@ example="""{
     "ver": "1.3.3.7"
 }"""
 
+local_url="http://localhost:8000/dsa_keys"
+public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
+test_url="http://de.dscg.ubirch.com/trustList/DSC/"
 #QR-Image generation
 def generate_qrimage(cert_string: str):
     # genereate matplotlib image
@@ -87,6 +97,7 @@ def dsa_keys():
     return dsa_json
 
 
+
 #Index
 @app.route('/')
 def index():
@@ -107,82 +118,166 @@ def upload():
             return "No QR detected"
         else:
             payload=(data[0].data)
-            valid = verify(payload,"http://localhost:8000/dsa_keys")
+            valid = verify(payload,local_url)
             return valid
     else:
         return "No image selected"
-
-#======================start valueset index======================================
-@app.route("/valuesets/")
-def valuesetindex():
+#======bereitstellung für App
+#übernehme einfach die echten urls
+    
+#trustlist
+@app.route("/trustList/DSC/")
+#@as_json
+def dsa_keys_app():
     print("queried", inspect.stack()[0][3])
-    return render_template("valuesets.html")
+    url="https://de.dscg.ubirch.com/trustList/DSC"
+    try:
+        response = requests.get(url)
+        trustlist = response.content
+        return trustlist
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/country-2-codes")
-def country2codes():
+#bnrules
+@app.route("/bnrules")
+@as_json
+def bnrules_app():
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/country-2-codes.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/bnrules"
+    try:
+        response = requests.get(url)
+        bnrules = response.json()
+        return bnrules
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/disease-agent-targeted")
-def diseaseagenttargeted():
+@app.route("/bnrules/<string:bnhash>")
+@as_json
+def bnrules_app_hashes(bnhash):
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/disease-agent-targeted.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/bnrules/"+bnhash
+    try:
+        response = requests.get(url)
+        bnrules = response.json()
+        return bnrules
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/test-manf")
-def testmanf():
+
+#valuests
+@app.route('/valuesets')
+@as_json
+def valuesets():
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/test-manf.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/valuesets"
+    try:
+        response = requests.get(url)
+        valuesets = response.json()
+        return valuesets
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/test-result")
-def testresult():
+    
+@app.route('/valuesets/<string:valuesethash>')
+@as_json
+def valuesetshash(valuesethash):
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/test-result.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
-
-@app.route("/valuesets/test-type")
-def testtype():
+    url = "https://distribution.dcc-rules.de/valuesets/"+valuesethash
+    try:
+        response = requests.get(url)
+        valuesets = response.json()
+        return valuesets
+    except:
+        return "not valid or failed"
+    
+#rules
+@app.route('/rules')
+@as_json
+def rules():
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/test-type.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/rules"
+    try:
+        response = requests.get(url)
+        rules = response.json()
+        return rules
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/vaccine-mah-manf")
-def vaccinemahmanf():
+    
+@app.route('/rules/<string:rules_country>/<string:rules_sub_hash>')
+@as_json
+def rules_suburl(rules_country,rules_sub_hash):
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/vaccine-mah-manf.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/rules/"+rules_country+"/"+rules_sub_hash
+    try:
+        response = requests.get(url)
+        rules = response.json()
+        return rules
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/vaccine-medicinal-product")
-def vaccinemedicinalproduct():
+#country list
+@app.route('/countrylist')
+@as_json
+def countrylist():
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/vaccine-medicinal-product.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
-
-@app.route("/valuesets/vaccine-prophylaxis")
-def vaccineprophylaxis():
+    url = "https://distribution.dcc-rules.de/countrylist"
+    try:
+        response = requests.get(url)
+        countrylist = response.json()
+        return countrylist
+    except:
+        return "not valid or failed"
+    
+#domestic rules
+@app.route('/domesticrules')
+@as_json
+def domesticrules():
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/vaccine-prophylaxis.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/domesticrules"
+    try:
+        response = requests.get(url)
+        domesticrules = response.json()
+        return domesticrules
+    except:
+        return "not valid or failed"
 
-@app.route("/valuesets/valueset")
-def valueset():
+@app.route('/domesticrules/<string:domestic_hash>')
+@as_json
+def domestic_suburl(domestic_hash):
     print("queried", inspect.stack()[0][3])
-    with open("valuesets/valueset.json", "rb") as file:
-        datei = file.read()
-    return json.loads(datei)
+    url = "https://distribution.dcc-rules.de/domesticrules/"+domestic_hash
+    try:
+        response = requests.get(url)
+        domesticrules = response.json()
+        return domesticrules
+    except:
+        return "not valid or failed"
+    
+#kid list
+@app.route('/kid.lst')
+def kidlst():
+    print("queried", inspect.stack()[0][3])
+    try:
+        url = "https://de.crl.dscg.ubirch.com/kid.lst"
+        response = requests.get(url)
+        kidlst = (response.content)
+        return kidlst
+    except:
+        return "not valid or failed"
 
-#======================end valueset index======================================
-
+@app.route('/<string:indexhash>/index.lst')
+def lstindex(indexhash):
+    print("queried", inspect.stack()[0][3])
+    try:
+        url = "https://de.crl.dscg.ubirch.com/"+indexhash+"/index.lst"
+        response = requests.get(url)
+        kidlst = (response.content)
+        return kidlst
+    except:
+        return "not valid or failed"
+#======ende bereitstellung für die app
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
 
