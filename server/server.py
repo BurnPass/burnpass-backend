@@ -18,7 +18,7 @@ from flask_json import FlaskJSON, as_json
 
 app = Flask(__name__)
 #config für json
-json = FlaskJSON(app)
+json_app = FlaskJSON(app)
 app.config['JSON_AS_ASCII'] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
@@ -154,7 +154,7 @@ def bnrules_app():
 @app.route("/bnrules/<string:bnhash>")
 @as_json
 def bnrules_app_hashes(bnhash):
-    print("queried", inspect.stack()[0][3])
+    print("queried", inspect.stack()[0][3], bnhash)
     url = "https://distribution.dcc-rules.de/bnrules/"+bnhash
     try:
         response = requests.get(url)
@@ -181,7 +181,7 @@ def valuesets():
 @app.route('/valuesets/<string:valuesethash>')
 @as_json
 def valuesetshash(valuesethash):
-    print("queried", inspect.stack()[0][3])
+    print("queried", inspect.stack()[0][3], valuesethash)
     url = "https://distribution.dcc-rules.de/valuesets/"+valuesethash
     try:
         response = requests.get(url)
@@ -207,7 +207,7 @@ def rules():
 @app.route('/rules/<string:rules_country>/<string:rules_sub_hash>')
 @as_json
 def rules_suburl(rules_country,rules_sub_hash):
-    print("queried", inspect.stack()[0][3])
+    print("queried", inspect.stack()[0][3],rules_country,rules_sub_hash)
     url = "https://distribution.dcc-rules.de/rules/"+rules_country+"/"+rules_sub_hash
     try:
         response = requests.get(url)
@@ -245,7 +245,7 @@ def domesticrules():
 @app.route('/domesticrules/<string:domestic_hash>')
 @as_json
 def domestic_suburl(domestic_hash):
-    print("queried", inspect.stack()[0][3])
+    print("queried", inspect.stack()[0][3],domestic_hash)
     url = "https://distribution.dcc-rules.de/domesticrules/"+domestic_hash
     try:
         response = requests.get(url)
@@ -268,7 +268,7 @@ def kidlst():
 
 @app.route('/<string:indexhash>/index.lst')
 def lstindex(indexhash):
-    print("queried", inspect.stack()[0][3])
+    print("queried", inspect.stack()[0][3],indexhash)
     try:
         url = "https://de.crl.dscg.ubirch.com/"+indexhash+"/index.lst"
         response = requests.get(url)
