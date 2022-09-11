@@ -49,7 +49,7 @@ example="""{
 
 local_url="http://localhost:8000/dsa_keys"
 public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
-test_url="http://de.dscg.ubirch.com/trustList/DSC/"
+test_url="http://scahry.ddns.net:8000/trustList/DSC/"
 #QR-Image generation
 def generate_qrimage(cert_string: str):
     # genereate matplotlib image
@@ -118,7 +118,7 @@ def upload():
             return "No QR detected"
         else:
             payload=(data[0].data)
-            valid = verify(payload,local_url)
+            valid = verify(payload,test_url)
             return valid
     else:
         return "No image selected"
