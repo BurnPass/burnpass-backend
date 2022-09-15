@@ -12,6 +12,8 @@ Starten des Servers
 ===================
 
 ```
+sudo apt-get install zbar-tools
+sudo apt-get install zbar-tools --fix-missing
 ./start_server.sh
 ```
 

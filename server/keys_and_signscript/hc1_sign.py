@@ -78,7 +78,7 @@ def sign(payload):
     # And base45 encode the result
     #
     #windows only
-    if platform == "win32" :
+    if True:#platform == "win32" : #scheint wohl doch bei linux zu gehen
         out = b'HC1:' + b45encode(out).decode().encode('ascii')
     #linux only - not tested on other platforms:
     else:

@@ -81,7 +81,7 @@ def create_digital_hcert():
         inputdata = form.inputdata.data
         form.inputdata.data=None
         img = generate_qrimage(sign(str(inputdata)))
-        return send_file(img, 'file.png', as_attachment=True, attachment_filename='HCERT'+str(randint(10000,99999)))
+        return send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
                            inputdata=inputdata,
@@ -126,17 +126,23 @@ def upload():
 #übernehme einfach die echten urls
     
 #trustlist
+localcert=True
 @app.route("/trustList/DSC/")
 #@as_json
 def dsa_keys_app():
     print("queried", inspect.stack()[0][3])
-    url="https://de.dscg.ubirch.com/trustList/DSC"
-    try:
-        response = requests.get(url)
-        trustlist = response.content
-        return trustlist
-    except:
-        return "not valid or failed"
+    if localcert:
+        with open("keys_and_signscript/db.json", "r") as file:
+            dsa_keys = file.read()
+        return dsa_keys
+    else:
+        url="https://de.dscg.ubirch.com/trustList/DSC"
+        try:
+            response = requests.get(url)
+            trustlist = response.content
+            return trustlist
+        except:
+            return "not valid or failed"
 
 #bnrules
 @app.route("/bnrules")
