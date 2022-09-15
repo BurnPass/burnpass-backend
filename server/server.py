@@ -47,9 +47,10 @@ example="""{
     "ver": "1.3.3.7"
 }"""
 
-local_url="http://localhost:8000/dsa_keys"
+local_url="http://localhost:8000/trustList/DSC/"
 public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
-test_url="http://scahry.ddns.net:8000/trustList/DSC/"
+public_url_app="https://de.dscg.ubirch.com/trustList/DSC"
+test_url="http://192.168.178.23:8000/trustList/DSC/"
 #QR-Image generation
 def generate_qrimage(cert_string: str):
     # genereate matplotlib image
