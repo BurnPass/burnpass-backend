@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, send_file, request
 from flask_wtf import FlaskForm
+from wtforms.fields import DateField
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
@@ -15,6 +16,7 @@ from random import randint
 import requests
 import inspect, sys
 from flask_json import FlaskJSON, as_json
+from datetime import date
 
 app = Flask(__name__)
 #config für json
@@ -66,27 +68,48 @@ def generate_qrimage(cert_string: str):
 #CSRF Token
 app.config["SECRET_KEY"] = "2bMYYLmd-EvD1PsDm-cssKJp3p-ZK8exToo-1WMVEewm-`uBrMvMY-Kr\a4t3I-FD6mTVbZ-oxY5uBTA"
 
-#Zertifikat Input Form
-class ZertForm(FlaskForm):
-    inputdata = TextAreaField("Payload",validators=[DataRequired()],widget=TextArea())
+#Zertifikat Input Forms
+class VornameForm(FlaskForm,):
+    vorname = TextAreaField("Vornamen",validators=[DataRequired()],widget=TextArea(),default="Max")
     submit = SubmitField("Zertifikat erstellen")
 
+class NachnameForm(FlaskForm,):
+    nachname = TextAreaField("Nachname",validators=[DataRequired()],widget=TextArea(),default="Mustermann")
 
+class DateOfBirthForm(FlaskForm):
+    date = DateField('Start Date',default=date.today)
+
+#payload ersteller aus den Daten
+def make_payload_and_delete(formlist):
+    dob=str(formlist[0].date.data)+" "
+    formlist[0].date.data=None
+    gn=str(formlist[1].vorname.data)+" "
+    formlist[1].vorname.data=None
+    fn=str(formlist[2].nachname.data)+" "
+    formlist[2].nachname.data=None
+    ci="unique string "
+    e=dob+gn+fn+ci
+    return e
 
 #Seite zum Erstellen von Zertifikaten
 @app.route('/create_digital_hcert',methods=["GET","POST"])
 def create_digital_hcert():
-    inputdata = None
-    form = ZertForm(inputdata=example)
-    if form.validate_on_submit():
-        inputdata = form.inputdata.data
-        form.inputdata.data=None
-        img = generate_qrimage(sign(str(inputdata)))
-        return send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
+    #Je ein Formulareintrag pro variable
+    vnameform = VornameForm()
+    nnameform = NachnameForm()
+    dobform = DateOfBirthForm() 
+    formlist=[dobform,vnameform,nnameform]
+    #bei abschicken des Formulares
+    if vnameform.validate_on_submit():
+        #daten abgreifen
+        returnstring = make_payload_and_delete(formlist)
+        img = generate_qrimage(sign(str(0)))
+        return returnstring #send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
-                           inputdata=inputdata,
-                           form = form)
+                           vnameform = vnameform,
+                           nnameform = nnameform,
+                           dobform=dobform)
 
 
 #DSA Key bereitstellung

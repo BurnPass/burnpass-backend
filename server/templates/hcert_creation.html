@@ -1,8 +1,12 @@
 <h1> digitales Impfzertifikat Ausstellfomular</h1> 
 <br/>
 <form method = "POST">
-{{ form.hidden_tag() }}
-{{ form.inputdata.label}}
-{{ form.inputdata(cols="70", rows="30") }}
+{{ vnameform.hidden_tag() }}
+{{ vnameform.vorname.label}}
+{{ vnameform.vorname}}
+{{ nnameform.nachname.label}}
+{{ nnameform.nachname}}
+{{ dobform.date.label}}
+{{ dobform.date}}
 <br/> <br/>
-{{ form.submit() }}
+{{ vnameform.submit() }}
