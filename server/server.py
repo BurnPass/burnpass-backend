@@ -2,7 +2,7 @@
 from flask import Flask, render_template, send_file, request
 from flask_wtf import FlaskForm
 from wtforms.fields import DateField
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
 import json
@@ -70,14 +70,17 @@ app.config["SECRET_KEY"] = "2bMYYLmd-EvD1PsDm-cssKJp3p-ZK8exToo-1WMVEewm-`uBrMvM
 
 #Zertifikat Input Forms
 class VornameForm(FlaskForm,):
-    vorname = TextAreaField("Vornamen",validators=[DataRequired()],widget=TextArea(),default="Max")
+    vorname = StringField("Vornamen",validators=[DataRequired()],default="Max")
     submit = SubmitField("Zertifikat erstellen")
 
 class NachnameForm(FlaskForm,):
-    nachname = TextAreaField("Nachname",validators=[DataRequired()],widget=TextArea(),default="Mustermann")
+    nachname = StringField("Nachname",validators=[DataRequired()],default="Mustermann")
 
 class DateOfBirthForm(FlaskForm):
     date = DateField('Start Date',default=date.today)
+
+class LandwahlForm(FlaskForm):
+    land = SelectField("Land", choices=[("a","a"),("b","b")],validators = [DataRequired()])
 
 #payload ersteller aus den Daten
 def make_payload_and_delete(formlist):
@@ -87,7 +90,9 @@ def make_payload_and_delete(formlist):
     formlist[1].vorname.data=None
     fn=str(formlist[2].nachname.data)+" "
     formlist[2].nachname.data=None
-    ci="unique string "
+    co=str(formlist[3].land.data)
+    formlist[3].land.data=None
+    ci=str(randint(10000000000000000,99999999999999999))
     e=dob+gn+fn+ci
     return e
 
@@ -97,8 +102,10 @@ def create_digital_hcert():
     #Je ein Formulareintrag pro variable
     vnameform = VornameForm()
     nnameform = NachnameForm()
-    dobform = DateOfBirthForm() 
-    formlist=[dobform,vnameform,nnameform]
+    dobform = DateOfBirthForm()
+    landform=LandwahlForm()
+    
+    formlist=[dobform,vnameform,nnameform,landform]
     #bei abschicken des Formulares
     if vnameform.validate_on_submit():
         #daten abgreifen
@@ -109,7 +116,8 @@ def create_digital_hcert():
     return render_template("hcert_creation.html",
                            vnameform = vnameform,
                            nnameform = nnameform,
-                           dobform=dobform)
+                           dobform=dobform,
+                           landform=landform)
 
 
 #DSA Key bereitstellung
