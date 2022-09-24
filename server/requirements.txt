@@ -13,3 +13,4 @@ flask-wtf
 pyzbar
 pillow
 requests
+trans
