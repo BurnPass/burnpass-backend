@@ -1,0 +1,117 @@
+{
+  "Identifier": "BNR-DE-0210",
+  "Type": "BoosterNotification",
+  "Country": "DE",
+  "Version": "1.0.2",
+  "SchemaVersion": "1.0.0",
+  "Engine": "CERTLOGIC",
+  "EngineVersion": "1.0.0",
+  "CertificateType": "General",
+  "Description": [
+    {
+      "lang": "en",
+      "desc": "The German Standing Committee on Vaccinations (STIKO) recommends that anyone who received their basic immunization through a single dose of the Janssen vaccine (Johnson & Johnson) and who has not been diagnosed with a SARS-CoV-2 coronavirus infection get an additional dose of the vaccine to optimize their basic immunization, if their Janssen vaccination took place more than four weeks ago.\n\nThe certificates you have saved indicate that these criteria apply to you and that you have not had any additional vaccinations. We therefore wish to point out this recommendation. (Rule DE-BNR-0210)\n\nThis note is based solely on the certificates saved on your smartphone. The data was processed on your smartphone. No information was sent to the RKI or to any third parties in this process."
+    },
+    {
+      "desc": "Die Ständige Impfkommission (STIKO) empfiehlt allen Personen eine weitere Impfstoffdosis zur Optimierung der Grundimmunisierung, die mit einer Dosis des Janssen-Impfstoffs (Johnson & Johnson) grundimmunisiert wurden, bei denen keine Infektion mit dem Coronavirus SARS-CoV-2 nachgewiesen wurde und wenn ihre Janssen-Impfung über 4 Wochen her ist.\n\nDa Sie laut Ihrer gespeicherten Zertifikate dieser Personengruppe angehören und noch keine weitere Impfung erhalten haben, möchten wir Sie auf diese Empfehlung hinweisen. (Regel DE-BNR-0210)\n\nDieser Hinweis basiert ausschließlich auf den auf Ihrem Smartphone gespeicherten Zertifikaten. Die Verarbeitung der Daten erfolgte auf Ihrem Smartphone. Es wurden hierbei keine Daten an das RKI oder Dritte übermittelt.",
+      "lang": "de"
+    },
+    {
+      "desc": "Almanya Daimi Aşı Komisyonu (STIKO), tek doz Janssen aşısı (Johnson & Johnson) ile temel bağışıklık kazanmış ve SARS-CoV-2 koronavirüs enfeksiyonu tanısı almamış herkesin, Janssen aşısının üzerinden en az dört hafta geçmişse temel bağışıklıklarını optimize etmek üzere ek doz aşı yaptırmasını önermektedir.\n\nKaydettiğiniz sertifikalar bu kriterlerin sizin için geçerli olduğunu ve herhangi bir ek aşı yaptırmadığınızı gösteriyor. Dolayısıyla bu öneriyi vurgulamak isteriz. (Kural DE-BNR-0210)\n\nBu not yalnızca akıllı telefonunuza kaydedilen sertifikalara dayalıdır. Veriler akıllı telefonunuzda işlenmiştir. Bu süreçte RKI veya herhangi bir üçüncü tarafa hiçbir bilgi gönderilmemiştir.",
+      "lang": "tr"
+    },
+    {
+      "desc": "Комитетът по ваксините на Германия (STIKO) препоръчва на всеки, който е получил основната си имунизация чрез еднократна доза от ваксината \"Янсен\" (Johnson & Johnson) и който не е бил диагностициран с коронавирусна инфекция от SARS-CoV-2, да получи допълнителна доза от ваксината с цел оптимизиране на основната имунизация, ако ваксинацията с \"Янсен\" е направена преди повече от четири месеца.\n\nЗапазените от Вас сертификати показват, че тези критерии важат за Вас и че не сте получили допълнителни ваксинации Затова бихме искали да Ви обърнем внимание върху тази препоръка. (Наредба DE-BNR-0210)\n\nТази забележка се основава единствено на сертификатите, които са запазени във Вашия смартфон. Данните са обработени в него и в процеса не е изпращана информация към института „Роберт Кох“ или други трети лица.",
+      "lang": "bg"
+    },
+    {
+      "desc": "Niemiecka Stała Komisja ds. Szczepień (STIKO) (STIKO) zaleca, aby osoby, które otrzymały szczepienie podstawowe w postaci jednej dawki szczepionki Janssen (Johnson & Johnson) i u których nie zdiagnozowano zakażenia koronawirusem SARS-CoV-2, otrzymały dodatkową dawkę szczepionki w celu optymalizacji szczepienia podstawowego, jeśli szczepionka Janssen została podana ponad 4 tygodnie temu.\n\nZ zapisanych przez Ciebie certyfikatów wynika, że te kryteria dotyczą Ciebie i że nie przyjąłeś(-aś) dodatkowych szczepień. Z tego względu chcemy zwrócić Twoją uwagę na to zalecenie. (Reguła DE-BNR-0210)\n\nInformacje te opierają się wyłącznie na certyfikatach zapisanych w Twoim smartfonie. Dane zostały przetworzone na Twoim smartfonie. Nie przesłano żadnych danych do RKI ani do osób trzecich.",
+      "lang": "pl"
+    },
+    {
+      "desc": "Comisia permanentă de vaccinare din Germania (STIKO) recomandă ca orice persoană care a primit vaccinarea standard cu o singură doză de vaccin Janssen (Johnson & Johnson) și care nu a fost diagnosticată cu infecția cu SARS-CoV-2 să primească o doză suplimentară de vaccin pentru a-și optimiza imunizarea standard, dacă vaccinarea cu vaccinul Janssen a avut loc cu peste patru săptămâni în urmă.\n\nCertificatele pe care le-ați salvat arată că aceste criterii se aplică pentru dvs. și că nu aveți efectuate vaccinări suplimentare. Din acest motiv, dorim să vă informăm despre această recomandare. (Regula DE-BNR-0210)\n\nAceastă notificare se bazează doar pe certificatele salvate pe smartphone-ul dvs. Datele au fost prelucrate pe smartphone-ul dvs. Nu au fost transmise niciun fel de date la RKI sau terți în acest proces.",
+      "lang": "ro"
+    },
+    {
+      "desc": "Німецький чинний комітет з вакцинації (STIKO) рекомендує всім, хто отримав стандартну імунізацію за допомогою однієї дози вакцини Janssen (Johnson & Johnson) і у кого не було діагностовано коронавірусну інфекцію SARS-CoV-2, отримати додаткову дозу вакцини для оптимізації стандартної імунізації, якщо їх вакцинація Janssen була проведена більше чотирьох тижнів тому.\n\nЗбережені вами сертифікати вказують на те, що ці критерії діють для вас, і що ви не зробили додаткових вакцинацій. Тому ми хочемо звернути увагу на цю рекомендацію. (Правило DE-BNR-0210)\n\nЦя нотатка заснована виключно на сертифікатах, збережених на вашому смартфоні. Дані були оброблені на вашому смартфоні. Жодної інформації не було надіслано до RKI або будь-яким третім особам у цьому процесі.",
+      "lang": "uk"
+    }
+  ],
+  "ValidFrom": "2022-05-04T16:00:00Z",
+  "ValidTo": "2030-06-01T00:00:00Z",
+  "AffectedFields": [
+    "v.0",
+    "v.0.mp",
+    "v.0.dn",
+    "v.0.sd",
+    "r.0",
+    "v.0.dt"
+  ],
+  "Logic": {
+    "if": [
+      {
+        "var": "payload.v.0"
+      },
+      {
+        "and": [
+          {
+            "===": [
+              {
+                "var": "payload.v.0.mp"
+              },
+              "EU/1/20/1525"
+            ]
+          },
+          {
+            "===": [
+              {
+                "var": "payload.v.0.dn"
+              },
+              1
+            ]
+          },
+          {
+            "===": [
+              {
+                "var": "payload.v.0.sd"
+              },
+              1
+            ]
+          },
+          {
+            "not-before": [
+              {
+                "plusTime": [
+                  {
+                    "var": "external.validationClock"
+                  },
+                  0,
+                  "day"
+                ]
+              },
+              {
+                "plusTime": [
+                  {
+                    "var": "payload.v.0.dt"
+                  },
+                  28,
+                  "day"
+                ]
+              }
+            ]
+          },
+          {
+            "if": [
+              {
+                "var": "payload.r.0"
+              },
+              false,
+              true
+            ]
+          }
+        ]
+      },
+      false
+    ]
+  }
+}

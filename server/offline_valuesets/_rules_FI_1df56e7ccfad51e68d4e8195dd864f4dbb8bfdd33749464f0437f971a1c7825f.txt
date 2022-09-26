@@ -1,0 +1,36 @@
+{
+  "Identifier": "VR-FI-0000",
+  "Type": "Acceptance",
+  "Country": "FI",
+  "Version": "1.0.5",
+  "SchemaVersion": "1.0.0",
+  "Engine": "CERTLOGIC",
+  "EngineVersion": "0.7.5",
+  "CertificateType": "Vaccination",
+  "Description": [
+    {
+      "lang": "en",
+      "desc": "Vaccination certificate has more than one entry"
+    },
+    {
+      "lang": "fi",
+      "desc": "Rokotustodistus ei ole määritysten mukainen"
+    },
+    {
+      "lang": "sv",
+      "desc": "Intyget om coronavaccinationer uppfyller inte bestämningarna"
+    }
+  ],
+  "ValidFrom": "2022-09-23T00:00:00Z",
+  "ValidTo": "2030-06-01T00:00:00Z",
+  "AffectedFields": [
+    "v.1"
+  ],
+  "Logic": {
+    "!": [
+      {
+        "var": "payload.v.1"
+      }
+    ]
+  }
+}
