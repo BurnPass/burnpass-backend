@@ -7,7 +7,11 @@ cd keys_and_signscript
 ./gen-csca-dsc.sh
 ./keys_to_db.sh
 ```
-
+Optional: Runterladen der valuesets und rules für den offline-modus
+===================
+```
+python3 offline_valuesets.py
+```
 Starten des Servers
 ===================
 

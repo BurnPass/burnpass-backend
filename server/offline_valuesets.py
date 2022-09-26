@@ -43,4 +43,5 @@ def download_valuesets_and_rules():
             with open("offline_valuesets/"+element.replace("/","_")+".txt","w",encoding="utf-8")as f:
                 f.write((urls[element][1]))
         print("saving "+element)
-download_valuesets_and_rules()
+if __name__ == "__main__":
+    download_valuesets_and_rules()
