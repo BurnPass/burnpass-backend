@@ -12,7 +12,7 @@ import io
 import qrcode
 #QRcode lesen
 from pyzbar.pyzbar import decode
-#Pillow für Bildgenerierung des QRcodes
+#Pillow für Bild-Upload
 from PIL import Image
 #requests um auf das offizielle Backend live zurückzugreifen
 import requests
@@ -24,10 +24,8 @@ from flask_json import FlaskJSON, as_json
 from Formclasses import makeforms, makepayload
 #zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
 from keys_and_signscript.make_cert import make_cert,cert_to_db
-
-localcert=True#ob auf die lokalen public keys oder die offiziellen zugegriffen werden soll
-offlinemode=True#ist der offline mode an, wird auf eine offizielle version der offiziellen backends zurückgegriffen
-
+#config
+from config import *
 
 #Erstelle die Public Key Zertifikat Datenbank aus den aktuellen Keys
 #fehlen die Keys wird darauf aufmerksam
@@ -42,12 +40,6 @@ app = Flask(__name__)
 json_app = FlaskJSON(app)
 app.config['JSON_AS_ASCII'] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-
-
-local_url="http://localhost:8000/trustList/DSC/"
-public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
-public_url_app="https://de.dscg.ubirch.com/trustList/DSC"
-www_url="http://scahry.ddns.net:8000/trustList/DSC/"
 
 
 #QR-Image generation
@@ -116,7 +108,7 @@ def upload():
         else:
             #falls ein QR-Code gefunden wurde, prüfe diesen
             payload=(data[0].data)
-            valid = verify(payload,www_url)
+            valid = verify(payload,verify_url)
             return valid
     else:
         return "No image selected"
