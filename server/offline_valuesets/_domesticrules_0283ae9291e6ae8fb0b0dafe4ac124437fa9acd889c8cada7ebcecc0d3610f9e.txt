@@ -1,0 +1,46 @@
+{
+  "Identifier": "VR-DE-5004",
+  "Type": "Acceptance",
+  "Country": "DE",
+  "Version": "1.0.0",
+  "SchemaVersion": "1.0.0",
+  "Engine": "CERTLOGIC",
+  "EngineVersion": "0.7.5",
+  "CertificateType": "Vaccination",
+  "Description": [
+    {
+      "lang": "en",
+      "desc": "The full vaccination is valid for an unlimited period."
+    },
+    {
+      "lang": "de",
+      "desc": "Die vollständige Impfung ist unbegrenzt gültig."
+    },
+    {
+      "lang": "fr",
+      "desc": "Le vaccin complet est valable sans limites."
+    },
+    {
+      "lang": "es",
+      "desc": "La vacuna completa tiene una validez indefinida."
+    },
+    {
+      "lang": "it",
+      "desc": "Il vaccino completo ha validità illimitata."
+    }
+  ],
+  "ValidFrom": "2022-02-22T08:00:00Z",
+  "ValidTo": "2030-06-01T00:00:00Z",
+  "AffectedFields": [
+    "v.0"
+  ],
+  "Logic": {
+    "if": [
+      {
+        "var": "payload.v.0"
+      },
+      true,
+      true
+    ]
+  }
+}

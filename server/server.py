@@ -22,13 +22,11 @@ import inspect
 from flask_json import FlaskJSON, as_json
 #Eingabefelder und erstellung des payloads
 from Formclasses import makeforms, makepayload
-#randint für den Dateinamen
-from random import randint
 #zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
 from keys_and_signscript.make_cert import make_cert,cert_to_db
 
 localcert=True#ob auf die lokalen public keys oder die offiziellen zugegriffen werden soll
-offlinemode=False#ist der offline mode an, wird auf eine offizielle version der offiziellen backends zurückgegriffen
+offlinemode=True#ist der offline mode an, wird auf eine offizielle version der offiziellen backends zurückgegriffen
 
 
 #Erstelle die Public Key Zertifikat Datenbank aus den aktuellen Keys
@@ -96,15 +94,6 @@ def create_digital_hcert():
                            dtform = formlist[10],
                            isform = formlist[11])
 
-#DSA Key bereitstellung
-@app.route("/dsa_keys")
-def dsa_keys():
-    with open("keys_and_signscript/db.json", "rb") as file:
-        dsa_keys = file.read()
-    dsa_json=json.loads(dsa_keys)
-    return dsa_json
-
-
 
 #Index
 @app.route('/')
@@ -145,13 +134,18 @@ def dsa_keys_app():
             dsa_keys = file.read()
         return dsa_keys
     else:
-        url="https://de.dscg.ubirch.com/trustList/DSC"
-        try:
-            response = requests.get(url)
-            trustlist = response.content
-            return trustlist
-        except:
-            return "not valid or failed"
+        if offlinemode:
+            with open("offline_valuesets/_trustList_DSC_.txt", "r") as file:
+                content = file.read()
+            return content
+        else:
+            url="https://de.dscg.ubirch.com/trustList/DSC"
+            try:
+                response = requests.get(url)
+                trustlist = response.content
+                return trustlist
+            except:
+                return "not valid or failed"
 
 #bnrules
 @app.route("/bnrules")
@@ -159,24 +153,34 @@ def dsa_keys_app():
 def bnrules_app():
     print("queried", inspect.stack()[0][3])
     url = "https://distribution.dcc-rules.de/bnrules"
-    try:
-        response = requests.get(url)
-        bnrules = response.json()
-        return bnrules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_bnrules.txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:
+        try:
+            response = requests.get(url)
+            bnrules = response.json()
+            return bnrules
+        except:
+            return "not valid or failed"
 
 @app.route("/bnrules/<string:bnhash>")
 @as_json
 def bnrules_app_hashes(bnhash):
     print("queried", inspect.stack()[0][3], bnhash)
     url = "https://distribution.dcc-rules.de/bnrules/"+bnhash
-    try:
-        response = requests.get(url)
-        bnrules = response.json()
-        return bnrules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_bnrules_"+bnhash+".txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:
+        try:
+            response = requests.get(url)
+            bnrules = response.json()
+            return bnrules
+        except:
+            return "not valid or failed"
 
 
 #valuests
@@ -185,12 +189,17 @@ def bnrules_app_hashes(bnhash):
 def valuesets():
     print("queried", inspect.stack()[0][3])
     url = "https://distribution.dcc-rules.de/valuesets"
-    try:
-        response = requests.get(url)
-        valuesets = response.json()
-        return valuesets
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_valuesets.txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:
+        try:
+            response = requests.get(url)
+            valuesets = response.json()
+            return valuesets
+        except:
+            return "not valid or failed"
 
     
 @app.route('/valuesets/<string:valuesethash>')
@@ -198,12 +207,17 @@ def valuesets():
 def valuesetshash(valuesethash):
     print("queried", inspect.stack()[0][3], valuesethash)
     url = "https://distribution.dcc-rules.de/valuesets/"+valuesethash
-    try:
-        response = requests.get(url)
-        valuesets = response.json()
-        return valuesets
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_valuesets_"+valuesethash+".txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:    
+        try:
+            response = requests.get(url)
+            valuesets = response.json()
+            return valuesets
+        except:
+            return "not valid or failed"
     
 #rules
 @app.route('/rules')
@@ -211,12 +225,17 @@ def valuesetshash(valuesethash):
 def rules():
     print("queried", inspect.stack()[0][3])
     url = "https://distribution.dcc-rules.de/rules"
-    try:
-        response = requests.get(url)
-        rules = response.json()
-        return rules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_rules.txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:    
+        try:
+            response = requests.get(url)
+            rules = response.json()
+            return rules
+        except:
+            return "not valid or failed"
 
     
 @app.route('/rules/<string:rules_country>/<string:rules_sub_hash>')
@@ -224,12 +243,17 @@ def rules():
 def rules_suburl(rules_country,rules_sub_hash):
     print("queried", inspect.stack()[0][3],rules_country,rules_sub_hash)
     url = "https://distribution.dcc-rules.de/rules/"+rules_country+"/"+rules_sub_hash
-    try:
-        response = requests.get(url)
-        rules = response.json()
-        return rules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_rules_"+rules_country+"_"+rules_sub_hash+".txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:    
+        try:
+            response = requests.get(url)
+            rules = response.json()
+            return rules
+        except:
+            return "not valid or failed"
 
 #country list
 @app.route('/countrylist')
@@ -237,12 +261,17 @@ def rules_suburl(rules_country,rules_sub_hash):
 def countrylist():
     print("queried", inspect.stack()[0][3])
     url = "https://distribution.dcc-rules.de/countrylist"
-    try:
-        response = requests.get(url)
-        countrylist = response.json()
-        return countrylist
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_countrylist.txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:  
+        try:
+            response = requests.get(url)
+            countrylist = response.json()
+            return countrylist
+        except:
+            return "not valid or failed"
     
 #domestic rules
 @app.route('/domesticrules')
@@ -250,47 +279,66 @@ def countrylist():
 def domesticrules():
     print("queried", inspect.stack()[0][3])
     url = "https://distribution.dcc-rules.de/domesticrules"
-    try:
-        response = requests.get(url)
-        domesticrules = response.json()
-        return domesticrules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_domesticrules.txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:  
+        try:
+            response = requests.get(url)
+            domesticrules = response.json()
+            return domesticrules
+        except:
+            return "not valid or failed"
 
 @app.route('/domesticrules/<string:domestic_hash>')
 @as_json
 def domestic_suburl(domestic_hash):
     print("queried", inspect.stack()[0][3],domestic_hash)
     url = "https://distribution.dcc-rules.de/domesticrules/"+domestic_hash
-    try:
-        response = requests.get(url)
-        domesticrules = response.json()
-        return domesticrules
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_domesticrules"+"_"+domestic_hash+".txt", "r",encoding="utf-8") as file:
+            content = json.loads(file.read())
+        return content
+    else:  
+        try:
+            response = requests.get(url)
+            domesticrules = response.json()
+            return domesticrules
+        except:
+            return "not valid or failed"
     
-#kid list
+#lst kid und index, wurde iwann mal abgefragt. aber nicht oft, kann also nicht so wichtig sein
+#hat was mit der revocationlist zu tun
 @app.route('/kid.lst')
 def kidlst():
     print("queried", inspect.stack()[0][3])
-    try:
-        url = "https://de.crl.dscg.ubirch.com/kid.lst"
-        response = requests.get(url)
-        kidlst = (response.content)
-        return kidlst
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        with open("offline_valuesets/_kid.lst", "rb") as file:
+            content = file.read()
+        return (content)
+    else:  
+        try:
+            url = "https://de.crl.dscg.ubirch.com/kid.lst"
+            response = requests.get(url)
+            kidlst = (response.content)
+            return kidlst
+        except:
+            return "not valid or failed"
 
 @app.route('/<string:indexhash>/index.lst')
 def lstindex(indexhash):
     print("queried", inspect.stack()[0][3],indexhash)
-    try:
-        url = "https://de.crl.dscg.ubirch.com/"+indexhash+"/index.lst"
-        response = requests.get(url)
-        kidlst = (response.content)
-        return kidlst
-    except:
-        return "not valid or failed"
+    if offlinemode:
+        return "None"
+    else:
+        try:
+            url = "https://de.crl.dscg.ubirch.com/"+indexhash+"/index.lst"
+            response = requests.get(url)
+            kidlst = (response.content)
+            return kidlst
+        except:
+            return "not valid or failed"
 #======ende bereitstellung für die app
     
 if __name__ == '__main__':
