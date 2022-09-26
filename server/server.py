@@ -79,7 +79,7 @@ def create_digital_hcert():
         returnstring = makepayload(formlist)
         #zum qr bild machen
         img = generate_qrimage(sign(returnstring))
-        return send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
+        return send_file(img, 'file.png', as_attachment=True, download_name=f'HCERT_{formlist[2].nachname.data}_{formlist[1].vorname.data}_{formlist[0].dob.data}.png')
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     #Eingabemaske anzeigen
     return render_template("hcert_creation.html",
