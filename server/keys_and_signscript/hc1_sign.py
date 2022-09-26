@@ -79,9 +79,9 @@ def sign(payload):
     # And base45 encode the result
     #
     #windows only
-    if platform == "win32" : #bei fehlern auf linux auch die windows version benutzen
-        out = b'HC1:' + b45encode(out).decode().encode('ascii')
-    #linux only - not tested on other platforms:
-    else:
-        out = b'HC1:' + bytes(b45encode(out),"utf8").decode().encode('ASCII')
+    #if platform == "win32" : #bei fehlern auf linux auch die windows version benutzen
+    out = b'HC1:' + b45encode(out).decode().encode('ascii')
+    #linux version für base45 version < 0.4.4
+    #else:
+    #   out = b'HC1:' + bytes(b45encode(out),"utf8").decode().encode('ASCII')
     return out

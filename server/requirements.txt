@@ -1,4 +1,4 @@
-base45
+base45>=0.4.4
 cbor2
 cose
 cryptography>=3.3.1,<4.0.0
