@@ -27,6 +27,12 @@ from random import randint
 #zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
 from keys_and_signscript.make_cert import make_cert,cert_to_db
 
+localcert=True#ob auf die lokalen public keys oder die offiziellen zugegriffen werden soll
+offlinemode=False#ist der offline mode an, wird auf eine offizielle version der offiziellen backends zurückgegriffen
+
+
+#Erstelle die Public Key Zertifikat Datenbank aus den aktuellen Keys
+#fehlen die Keys wird darauf aufmerksam
 try:
     cert_to_db(make_cert("keys_and_signscript"),"keys_and_signscript")
 except:
@@ -39,13 +45,13 @@ json_app = FlaskJSON(app)
 app.config['JSON_AS_ASCII'] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-localcert=True#ob auf die lokalen public keys oder die offiziellen zugegriffen werden soll
+
 local_url="http://localhost:8000/trustList/DSC/"
 public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
 public_url_app="https://de.dscg.ubirch.com/trustList/DSC"
-test_url="http://scahry.ddns.net:8000/trustList/DSC/"
+www_url="http://scahry.ddns.net:8000/trustList/DSC/"
 
-#
+
 #QR-Image generation
 def generate_qrimage(cert_string: str):
     # genereate matplotlib image
@@ -71,9 +77,11 @@ def create_digital_hcert():
     if formlist[1].validate_on_submit():
         #daten abgreifen
         returnstring = makepayload(formlist)
+        #zum qr bild machen
         img = generate_qrimage(sign(returnstring))
         return send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
+    #Eingabemaske anzeigen
     return render_template("hcert_creation.html",
                            dobform=formlist[0],
                            vnameform = formlist[1],
@@ -117,13 +125,15 @@ def upload():
         if len(data)==0:
             return "No QR detected"
         else:
+            #falls ein QR-Code gefunden wurde, prüfe diesen
             payload=(data[0].data)
-            valid = verify(payload,test_url)
+            valid = verify(payload,www_url)
             return valid
     else:
         return "No image selected"
+    
 #======bereitstellung für App
-#übernehme einfach die echten urls
+#übernehme einfach die echten urls, oder falls offline stelle eigene zur verfügung
     
 #trustlist
 @app.route("/trustList/DSC/")
