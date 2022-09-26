@@ -18,7 +18,7 @@
     },
     {
       "lang": "fr",
-      "desc": "Le type de test doit être l'un des ensembles de valeurs de la liste (RAT OU NAA)."
+      "desc": "Le type de test doit Ãªtre l'un des ensembles de valeurs de la liste (RAT OU NAA)."
     },
     {
       "lang": "es",

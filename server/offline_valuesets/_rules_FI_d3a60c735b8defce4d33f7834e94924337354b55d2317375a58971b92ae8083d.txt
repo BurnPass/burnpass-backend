@@ -14,11 +14,11 @@
     },
     {
       "lang": "fi",
-      "desc": "Sairastamistodistus ei ole määritysten mukainen"
+      "desc": "Sairastamistodistus ei ole m채채ritysten mukainen"
     },
     {
       "lang": "sv",
-      "desc": "Intyget om tillfrisknande från covid-19 uppfyller inte bestämningarna"
+      "desc": "Intyget om tillfrisknande fr책n covid-19 uppfyller inte best채mningarna"
     }
   ],
   "ValidFrom": "2022-09-23T00:00:00Z",

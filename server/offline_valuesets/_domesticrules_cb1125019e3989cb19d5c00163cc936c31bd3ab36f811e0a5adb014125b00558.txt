@@ -18,7 +18,7 @@
     },
     {
       "lang": "fr",
-      "desc": "Seuls les vaccins suivants sont acceptés: AstraZeneca, Biontech, Janssen, Moderna, Novavax."
+      "desc": "Seuls les vaccins suivants sont acceptÃ©s: AstraZeneca, Biontech, Janssen, Moderna, Novavax."
     },
     {
       "lang": "es",

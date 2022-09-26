@@ -18,7 +18,7 @@
     },
     {
       "lang": "sv",
-      "desc": "Giltighetstiderna i intyget om tillfrisknande från covid-19 strider mot varandra"
+      "desc": "Giltighetstiderna i intyget om tillfrisknande frÃ¥n covid-19 strider mot varandra"
     }
   ],
   "ValidFrom": "2022-09-23T00:00:00Z",

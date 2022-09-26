@@ -14,7 +14,7 @@
     },
     {
       "lang": "fr",
-      "desc": "Le type de test doit etre l'une des valeurs proposées du value set (RAT OR NAA)."
+      "desc": "Le type de test doit etre l'une des valeurs proposÃ©es du value set (RAT OR NAA)."
     }
   ],
   "ValidFrom": "2021-09-06T00:00:00Z",

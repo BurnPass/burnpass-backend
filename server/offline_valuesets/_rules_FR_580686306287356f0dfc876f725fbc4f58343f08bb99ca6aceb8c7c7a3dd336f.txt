@@ -14,7 +14,7 @@
     },
     {
       "lang": "fr",
-      "desc": "La maladie ciblée doit etre le COVID-19 de la value set."
+      "desc": "La maladie ciblÃ©e doit etre le COVID-19 de la value set."
     }
   ],
   "ValidFrom": "2021-09-06T00:00:00Z",
