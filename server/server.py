@@ -1,103 +1,51 @@
 #!/usr/bin/env python
+#Flask imports für User Interface
 from flask import Flask, render_template, send_file, request
-from flask_wtf import FlaskForm
-from wtforms.fields import DateField
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField
-from wtforms.validators import DataRequired, NumberRange
-from wtforms.widgets import TextArea
+#json import um dateien zu lesen
 import json
+#signierfunktion aus eigenem skript
 from keys_and_signscript.hc1_sign import sign
-from hc1_verify import verify
+from keys_and_signscript.hc1_verify import verify
+#IO um generiertes Bild nur im Arbeitsspeicher zu halten
 import io
+#QRcode generieren
 import qrcode
+#QRcode lesen
 from pyzbar.pyzbar import decode
+#Pillow für Bildgenerierung des QRcodes
 from PIL import Image
-from random import randint
+#requests um auf das offizielle Backend live zurückzugreifen
 import requests
-import inspect, sys
+#inspect für debug in der server konsole
+import inspect
+#Flask-Json für json darstellung im browser
 from flask_json import FlaskJSON, as_json
-from datetime import date
-from trans import trans
+#Eingabefelder und erstellung des payloads
+from Formclasses import makeforms, makepayload
+#randint für den Dateinamen
+from random import randint
+#zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
+from keys_and_signscript.make_cert import make_cert,cert_to_db
 
+try:
+    cert_to_db(make_cert("keys_and_signscript"),"keys_and_signscript")
+except:
+    print(" ! Please first generate Keys in the keys_and_signscript folder with gen-csca-dsc.sh script ! ")
+    exit(-1)
+    
 app = Flask(__name__)
 #config für json
 json_app = FlaskJSON(app)
 app.config['JSON_AS_ASCII'] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-
-choicelist_vaccines=[('EU/1/20/1507','Spikevax')
-,('EU/1/20/1525','Jcovden')
-,('EU/1/20/1528','Comirnaty')
-,('EU/1/21/1529','Vaxzevria')
-,('EU/1/21/1618','Nuvaxovid')
-,('AZD2816','AZD2816')
-,('Abdala','Abdala')
-,('BBIBP-CorV','BBIBP-CorV')
-,('CVnCoV','CVnCoV')
-,('Convidecia','Convidecia')
-,('CoronaVac','CoronaVac')
-,('Covaxin','Covaxin')
-,('CoviVac','CoviVac')
-,('Covid-19-adsorvida-inativada','Vacina adsorvida covid-19 (inativada)')
-,('Covid-19-recombinant','Covid-19 (recombinant)')
-,('Covifenz','Covifenz')
-,('Covishield','Covishield')
-,('Covovax','Covovax')
-,('EpiVacCorona','EpiVacCorona')
-,('EpiVacCorona-N','EpiVacCorona-N')
-,('Hayat-Vax','Hayat-Vax')
-,('Inactivated-SARS-CoV-2-Vero-Cell','Inactivated SARS-CoV-2 (Vero Cell) (deprecated)')
-,('MVC-COV1901','MVC COVID-19 vaccine')
-,('NVSI-06-08','NVSI-06-08')
-,('NVX-CoV2373','NVX-CoV2373 (deprecated)')
-,('R-COVI','R-COVI')
-,('SCTV01C','SCTV01C')
-,('Soberana-02','Soberana 02')
-,('Soberana-Plus','Soberana Plus')
-,('Sputnik-Light','Sputnik Light')
-,('Sputnik-M','Sputnik M')
-,('Sputnik-V','Sputnik-V')
-,('VLA2001','VLA2001')
-,('Vidprevtyn','Vidprevtyn')
-,('WIBP-CorV','WIBP-CorV')
-,('YS-SC2-010','YS-SC2-010')]
-choicelist_vaccine_types=[("1119305005","SARS-CoV-2 antigen vaccine"),("1119349007","SARS-CoV-2 mRNA vaccine"),("1157024006","Inactivated whole SARS-CoV-2 antigen vaccine"),("1162643001","SARS-CoV-2 recombinant spike protein antigen vaccine"),("29061000087103",	"COVID-19 non-replicating viral vector vaccine"),("J07BX03","covid-19 vaccines")]
-choicelist_vaccine_auth_holder=[('Bharat-Biotech','Bharat Biotech'),
-('CIGB','Center for Genetic Engineering and Biotechnology'),
-('Chumakov-Federal-Scientific-Center','Chumakov Federal Scientific Center for Research and Development of Immune-and-Biological Products'),
-('Finlay-Institute','Finlay Institute of Vaccines'),
-('Fiocruz','Fiocruz'),
-('Gamaleya-Research-Institute','Gamaleya Research Institute'),
-('Instituto-Butantan','Instituto Butantan'),
-('NVSI','National Vaccine and Serum Institute, China'),
-('ORG-100000788','Sanofi Pasteur'),
-('ORG-100001417','Janssen-Cilag International'),
-('ORG-100001699','AstraZeneca AB'),
-('ORG-100001981','Serum Institute Of India Private Limited'),
-('ORG-100006270','Curevac AG'),
-('ORG-100007893','R-Pharm CJSC'),
-('ORG-100008549','Medicago Inc.'),
-('ORG-100010771','Sinopharm Weiqida Europe Pharmaceutical s.r.o. - Prague location'),
-('ORG-100013793','CanSino Biologics'),
-('ORG-100020693','China Sinopharm International Corp. - Beijing location'),
-('ORG-100023050','Gulf Pharmaceutical Industries'),
-('ORG-100024420','Sinopharm Zhijun (Shenzhen) Pharmaceutical Co. Ltd. - Shenzhen location'),
-('ORG-100026614','Sinocelltech Ltd.'),
-('ORG-100030215','Biontech Manufacturing GmbH'),
-('ORG-100031184','Moderna Biotech Spain S.L.'),
-('ORG-100032020','Novavax CZ a.s.'),
-('ORG-100033914','Medigen Vaccine Biologics Corporation'),
-('ORG-100036422','Valneva France'),
-('Sinopharm-WIBP','Sinopharm - Wuhan Institute of Biological Products'),
-('Sinovac-Biotech','Sinovac Biotech'),
-('Vector-Institute','Vector Institute'),
-('Yisheng-Biopharma','Yisheng Biopharma')]
-
+localcert=True#ob auf die lokalen public keys oder die offiziellen zugegriffen werden soll
 local_url="http://localhost:8000/trustList/DSC/"
 public_url="https://verifier-api.coronacheck.nl/v4/verifier/public_keys"
 public_url_app="https://de.dscg.ubirch.com/trustList/DSC"
 test_url="http://scahry.ddns.net:8000/trustList/DSC/"
+
+#
 #QR-Image generation
 def generate_qrimage(cert_string: str):
     # genereate matplotlib image
@@ -112,138 +60,33 @@ def generate_qrimage(cert_string: str):
 
 #CSRF Token
 app.config["SECRET_KEY"] = "2bMYYLmd-EvD1PsDm-cssKJp3p-ZK8exToo-1WMVEewm-`uBrMvMY-Kr\a4t3I-FD6mTVbZ-oxY5uBTA"
-
-#Zertifikat Input Forms
-class VornameForm(FlaskForm,):
-    vorname = StringField("Vornamen",validators=[DataRequired()],default="Max")
-    submit = SubmitField("Zertifikat erstellen")
-
-class NachnameForm(FlaskForm,):
-    nachname = StringField("Nachname",validators=[DataRequired()],default="Mustermann")
-
-class DateOfBirthForm(FlaskForm):
-    dob = DateField('Geburtsdatum',default=date.today)
-
-class vaccinationDateForm(FlaskForm):
-    vdate = DateField('Tag der Impfung',default=date.today)
     
-class LandwahlForm(FlaskForm):
-    land = SelectField("Ausstellungsland", choices=[("DE","Deutschland"),("GB","Großbritannien")],validators = [DataRequired()])
 
-class diseaseAgentTargetedForm(FlaskForm):
-    dAT = SelectField("Krankheit oder Krankheitserreger", choices=[("840539006","COVID-19")],validators = [DataRequired()])
-
-class ImpfstoffTypForm(FlaskForm):
-    vp = SelectField("Impfstoff Typ", choices=choicelist_vaccine_types,validators = [DataRequired()])
-
-class ImpfstoffNameForm(FlaskForm):
-    mp = SelectField("Impfstoff Produkt", choices=choicelist_vaccines,validators = [DataRequired()])
-
-class ImpfstoffHerstellerForm(FlaskForm):
-    ma = SelectField("Impfstoff Hersteller", choices=choicelist_vaccine_auth_holder,validators = [DataRequired()])
-
-class DNIntForm(FlaskForm):
-    number = IntegerField("Anzahl der vorgesehenen Impfungen in der Serie",default=1,validators = [DataRequired(),NumberRange(min=1)])
-
-class SDIntForm(FlaskForm):
-    number = IntegerField("Zahl der Impfung in der Serie",default=1,validators = [DataRequired(),NumberRange(min=1)])
-
-class AusstellerForm(FlaskForm,):
-    aussteller = StringField("Zertifikatsausteller",validators=[DataRequired()],default="Robert Koch-Institut")
-    
-#payload ersteller aus den Daten
-def make_payload_and_delete(formlist):
-    #siehe: Technical Specifications for EU Digital COVID Certificates JSON Schema Specification
-    dob=str(formlist[0].dob.data)
-    formlist[0].dob.data=None
-    gn=str(formlist[1].vorname.data)
-    formlist[1].vorname.data=None
-    fn=str(formlist[2].nachname.data)
-    formlist[2].nachname.data=None
-    co=str(formlist[3].land.data)
-    formlist[3].land.data=None
-    tg=str(formlist[4].dAT.data)
-    formlist[4].dAT.data=None
-    vp=str(formlist[5].vp.data)
-    formlist[5].vp.data=None
-    mp=str(formlist[6].mp.data)
-    formlist[6].mp.data=None
-    ma=str(formlist[7].ma.data)
-    formlist[7].ma.data=None
-    dn=(formlist[8].number.data)
-    formlist[8].number.data=None
-    sd=(formlist[9].number.data)
-    formlist[9].number.data=None
-    dt=str(formlist[10].vdate.data)
-    formlist[10].vdate.data=None
-    is_=str(formlist[11].aussteller.data)#"is" ist ein keyword und kann nicht verwendet werden
-    formlist[11].aussteller.data=None
-    ci=str(randint(10000000000000000,99999999999999999))
-    payload_dict={
-    "dob": dob,
-        "nam": {
-            "fn": fn,
-            "fnt": trans(fn,"slug").upper().replace("_","<"),
-            "gn": gn,
-            "gnt": trans(gn,"slug").upper().replace("_","<")
-        },
-        "v": [
-            {
-                "ci": ci,
-                "co": co,
-                "dn": dn,
-                "dt": dt,
-                "is": is_,
-                "ma": ma,
-                "mp": mp,
-                "sd": sd,
-                "tg": tg,
-                "vp": vp
-            }
-        ],
-        "ver": "1.3.3.7"
-    }
-    return str(payload_dict).replace("'",'"')
 
 #Seite zum Erstellen von Zertifikaten
 @app.route('/create_digital_hcert',methods=["GET","POST"])
 def create_digital_hcert():
-    #Je ein Formulareintrag pro variable
-    vnameform = VornameForm()
-    nnameform = NachnameForm()
-    dobform = DateOfBirthForm()
-    landform = LandwahlForm()
-    dATform = diseaseAgentTargetedForm()
-    impftypform = ImpfstoffTypForm()
-    impfnameform = ImpfstoffNameForm()
-    impfhersteller = ImpfstoffHerstellerForm()
-    dnform = DNIntForm()
-    sdform = SDIntForm()
-    dtform = vaccinationDateForm()
-    isform = AusstellerForm()
-    
-    #liste aller formulareinträge
-    formlist=[dobform,vnameform,nnameform,landform,dATform,impftypform,impfnameform,impfhersteller,dnform,sdform,dtform,isform]
+    formlist=makeforms()
     #bei abschicken des Formulares
-    if vnameform.validate_on_submit():
+    if formlist[1].validate_on_submit():
         #daten abgreifen
-        returnstring = make_payload_and_delete(formlist)
+        returnstring = makepayload(formlist)
         img = generate_qrimage(sign(returnstring))
         return send_file(img, 'file.png', as_attachment=True, download_name='HCERT'+str(randint(10000,99999)))
         #return "SUCCESS: \n" + str(sign(str(inputdata)))
     return render_template("hcert_creation.html",
-                           vnameform = vnameform,
-                           nnameform = nnameform,
-                           dobform=dobform,
-                           landform=landform,
-                           dATform = dATform,
-                           impftypform = impftypform,
-                           impfnameform = impfnameform,
-                           impfhersteller = impfhersteller,
-                           dnform = dnform,
-                           sdform = sdform,
-                           dtform = dtform,
-                           isform = isform)
+                           dobform=formlist[0],
+                           vnameform = formlist[1],
+                           nnameform = formlist[2],
+                           landform=formlist[3],
+                           dATform = formlist[4],
+                           impftypform = formlist[5],
+                           impfnameform = formlist[6],
+                           impfhersteller = formlist[7],
+                           dnform = formlist[8],
+                           sdform = formlist[9],
+                           dtform = formlist[10],
+                           isform = formlist[11])
 
 #DSA Key bereitstellung
 @app.route("/dsa_keys")
@@ -283,7 +126,6 @@ def upload():
 #übernehme einfach die echten urls
     
 #trustlist
-localcert=True
 @app.route("/trustList/DSC/")
 #@as_json
 def dsa_keys_app():
