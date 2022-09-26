@@ -27,8 +27,9 @@ def sign(payload):
     #load payload to dictionary
     payload = json.loads(payload)
     #add claims
+    co=payload["v"][0]["co"]
     payload = {
-               1: "DE",
+               1: co,
                4: int(datetime.now().timestamp() + 180 * 24 * 3600),
                6: int(datetime.today().timestamp()),
                -260: {
