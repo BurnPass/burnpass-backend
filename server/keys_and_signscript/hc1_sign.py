@@ -3,19 +3,13 @@ import zlib
 import json
 import cbor2
 from datetime import datetime
-from base64 import b64encode, b64decode
-from sys import platform
-
 
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.keys.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
-from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
-from cose.keys.keyparam import KpKty
 from cose.keys.keytype import KtyEC2
 from cose.messages import Sign1Message
 from cryptography import x509
@@ -27,7 +21,7 @@ def sign(payload):
     #load payload to dictionary
     payload = json.loads(payload)
     #add claims
-    co=payload["v"][0]["co"]
+    co=payload["v"][0]["co"]#Angegebenes Land aus dem Zertifikat auch hier verwenden
     payload = {
                1: co,
                4: int(datetime.now().timestamp() + 180 * 24 * 3600),

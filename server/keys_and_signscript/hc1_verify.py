@@ -4,7 +4,6 @@ import json
 import requests
 import sys
 import zlib
-import re
 from base64 import b64decode, b64encode
 from datetime import date, datetime
 
