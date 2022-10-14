@@ -11,7 +11,7 @@ from random import randint
 #datetime für das Datum bei der Dateneingabe für das Zertifikat
 from datetime import date
 #auswahl Impfprodukt,Typ und Hersteller
-from choices import choicelist_vaccines,choicelist_vaccine_types,choicelist_vaccine_auth_holder
+from choices import choicelist_vaccines,choicelist_vaccine_types,choicelist_vaccine_auth_holder,choicelist_countries
 
 #Zertifikat Input Forms
 class VornameForm(FlaskForm):
@@ -28,7 +28,7 @@ class vaccinationDateForm(FlaskForm):
     vdate = DateField('Tag der Impfung',default=date.today)
     
 class LandwahlForm(FlaskForm):
-    land = SelectField("Ausstellungsland", choices=[("DE","Deutschland"),("GB","Großbritannien")],validators = [DataRequired()])
+    land = SelectField("Ausstellungsland", choices=choicelist_countries,validators = [DataRequired()])
 
 class diseaseAgentTargetedForm(FlaskForm):
     dAT = SelectField("Krankheit oder Krankheitserreger", choices=[("840539006","COVID-19")],validators = [DataRequired()])
