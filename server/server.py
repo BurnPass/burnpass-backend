@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #Flask imports für User Interface
 from flask import Flask, render_template, send_file, request
+from flask_bootstrap import Bootstrap
 #json import um dateien zu lesen
 import json
 #signierfunktion aus eigenem skript
@@ -26,7 +27,6 @@ from Formclasses import makeforms, makepayload
 from keys_and_signscript.make_cert import make_cert,cert_to_db
 #config
 from config import *
-
 #Erstelle die Public Key Zertifikat Datenbank aus den aktuellen Keys
 #fehlen die Keys wird darauf aufmerksam
 try:
@@ -36,6 +36,7 @@ except:
     exit(-1)
     
 app = Flask(__name__)
+Bootstrap(app)
 #config für json
 json_app = FlaskJSON(app)
 app.config['JSON_AS_ASCII'] = False

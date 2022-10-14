@@ -24,7 +24,7 @@ def make_cert(folder):
      'rawData': pemheadless,
      'signature': '',
      'thumbprint': '',
-     'timestamp': '2022-07-20T10:15:27+02:00'}
+     'timestamp': '2022-07-20T10:15:27+02:00'} #aktuelle Zeit einfügen?
 
     certs={"certificates":[dictentry]}
     return (str(certs).replace("'",'"'))

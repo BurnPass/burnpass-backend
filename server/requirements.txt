@@ -8,6 +8,7 @@ qrcode
 
 flask
 Flask-JSON
+flask-bootstrap
 gunicorn
 flask-wtf
 pyzbar

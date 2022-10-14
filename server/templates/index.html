@@ -1,3 +1,14 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/utils.html" as utils %}
+{% block content %}
+<style>
+.index {
+  margin: 20px;
+  font-size:300%;
+}
+</style>
+<div class="index">
 <h1>index</h1>
 <a href="/trustList/DSC">trustlist DSC</a> 
 </br>
@@ -6,3 +17,5 @@
 <a href="/verifyqr">verify hcert</a> 
 </br>
 <a href="/valuesets">valuesets index</a> 
+{%endblock %}
+</div>
