@@ -4,7 +4,7 @@ Generieren der Keys
 ```
 pip install -r requirements.txt
 cd keys_and_signscript
-./gen-csca-dsc.sh
+python3 gen_csca_dsc.py
 cd ../
 ```
 Optional: Runterladen der valuesets und rules für den offline-modus
