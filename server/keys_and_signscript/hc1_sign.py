@@ -18,19 +18,19 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 
 def sign(payload):
-    #load payload to dictionary
+    # load payload to dictionary
     payload = json.loads(payload)
-    #add claims
-    co=payload["v"][0]["co"]#Angegebenes Land aus dem Zertifikat auch hier verwenden
+    # add claims
+    co = payload["v"][0]["co"]  # Angegebenes Land aus dem Zertifikat auch hier verwenden
     payload = {
-               1: co,
-               4: int(datetime.now().timestamp() + 180 * 24 * 3600),
-               6: int(datetime.today().timestamp()),
-               -260: {
-                    1: payload,
-                },
-         }
-    #convert to byte
+        1: co,
+        4: int(datetime.now().timestamp() + 180 * 24 * 3600),
+        6: int(datetime.today().timestamp()),
+        -260: {
+            1: payload,
+        },
+    }
+    # convert to byte
     payload = cbor2.dumps(payload)
 
     # Note - we only need the public key for the KeyID calculation - we're not actually using it.
@@ -72,10 +72,10 @@ def sign(payload):
     out = zlib.compress(out, 9)
     # And base45 encode the result
     #
-    #windows only
-    #if platform == "win32" : #bei fehlern auf linux auch die windows version benutzen
+    # windows only
+    # if platform == "win32" : #bei fehlern auf linux auch die windows version benutzen
     out = b'HC1:' + b45encode(out).decode().encode('ascii')
-    #linux version für base45 version < 0.4.4
-    #else:
+    # linux version für base45 version < 0.4.4
+    # else:
     #   out = b'HC1:' + bytes(b45encode(out),"utf8").decode().encode('ASCII')
     return out

@@ -1,4 +1,4 @@
-import os 
+import os
 from os import listdir
 
 for file_name in listdir():
