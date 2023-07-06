@@ -32,7 +32,7 @@ from config import *
 try:
     cert_to_db(make_cert("keys_and_signscript"),"keys_and_signscript")
 except:
-    print(" ! Please first generate Keys in the keys_and_signscript folder with gen-csca-dsc.sh script ! ")
+    print(" ! Please first generate Keys in the keys_and_signscript folder with gen_csca_dsc.py script ! ")
     exit(-1)
     
 app = Flask(__name__)
