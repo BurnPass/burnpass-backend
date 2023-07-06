@@ -1,1 +1,0 @@
-echo '{"Foo":1, "Bar":{"Field1":"a value", "integer":1212112121}}' | python3 hc1_sign.py | python3 hc1_verify.py -p -u "http://localhost:3000/dsa_keys" -v
