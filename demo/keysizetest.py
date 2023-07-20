@@ -29,12 +29,6 @@ from cryptography.hazmat.primitives.asymmetric import ec
 
 # Flask-Json für json darstellung im browser
 from server.keys_and_signscript.certificate_util import gen_certificate
-# signierfunktion aus eigenem skript
-from server.keys_and_signscript.hc1_sign import sign
-
-
-# zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
-# QRcode lesen
 
 
 def gen_private_key():
