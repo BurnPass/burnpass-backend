@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # Pillow für Bild-Upload
-from PIL import Image
 # Flask imports für User Interface
+# Flask-Json für json darstellung im browser
+from PIL import Image
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
-# Flask-Json für json darstellung im browser
 from flask_json import FlaskJSON
-# QRcode lesen
 from pyzbar.pyzbar import decode
 
 # blueprints

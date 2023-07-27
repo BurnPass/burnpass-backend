@@ -169,6 +169,7 @@ def sign(payload, dsc_key):
 def test():
     private_key = gen_private_key()
     private_value, public_key_pem_headless = minimise_key(private_key)
+    print(public_key_pem_headless)
     dsc_key = gen_private_key()
     payload = '{"user_public": "' + public_key_pem_headless.decode() + '"}'
     cose = sign(payload, dsc_key)
@@ -187,3 +188,4 @@ def test():
 
 
 test()
+compare_sizes()

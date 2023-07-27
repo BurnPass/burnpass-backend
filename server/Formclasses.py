@@ -127,4 +127,4 @@ def makepayload(formlist):
         ],
         "ver": "1.3.3.7"
     }
-    return str(payload_dict).replace("'", '"')
+    return payload_dict
