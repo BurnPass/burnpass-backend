@@ -58,8 +58,8 @@ def generate_qrimage(cert_string: str):
 
 
 # Seite zum Erstellen von Zertifikaten
-@cert_creation_blueprint.route('/create_digital_hcert', methods=["GET", "POST"])
-def create_digital_hcert():
+@cert_creation_blueprint.route('/create_digital_bpcert', methods=["GET", "POST"])
+def create_digital_bpcert():
     formlist = makeforms()
     # bei Abschicken des Formulares
     if formlist[1].validate_on_submit():
@@ -70,7 +70,7 @@ def create_digital_hcert():
         # zum qr bild machen
         img = generate_qrimage(payload)
         return send_file(img, 'file.png', as_attachment=True,
-                         download_name=f'HCERT_{formlist[2].nachname.data}_{formlist[1].vorname.data}_{formlist[0].dob.data}.png')
+                         download_name=f'BPCERT_{formlist[2].nachname.data}_{formlist[1].vorname.data}_{formlist[0].dob.data}.png')
     # Eingabemaske anzeigen
     return render_template("hcert_creation.html",
                            dobform=formlist[0],
