@@ -57,7 +57,10 @@ def json_serial(obj):
 
 def verify(cin, url):
     cin = cin.decode("ASCII")
-    if cin.startswith('HC1'):
+    if cin.startswith('PV:'):
+        # remove the private value to decode
+        cin = cin[cin.find("BP"):]
+    if cin.startswith('BP1'):
         cin = cin[3:]
     if cin.startswith(':'):
         cin = cin[1:]

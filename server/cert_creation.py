@@ -38,8 +38,8 @@ def add_user_cert_an_sign(payload_dict):
     cose = sign(payload)
     # add the private value after the cose message
     # PV = private value
-    cose_and_private_value = cose + b"PV:" + private_value
-    # when reading the QR-Code, the last occurence of PV: can be looked for as the private value ist just numbers
+    cose_and_private_value = b"PV:" + private_value + cose
+    # when reading the QR-Code, the last first occurence of PV: can be looked for as well as the first occurence of BP:
     # Furthmore PV: is already base45
     return cose_and_private_value
 
