@@ -17,7 +17,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 
-def sign(payload):
+def sign(payload, public_key_pem_headless):
     # load payload to dictionary
     payload = json.loads(payload)
     # add claims
@@ -29,6 +29,7 @@ def sign(payload):
         -260: {
             1: payload,
         },
+        73: public_key_pem_headless,
     }
     # convert to byte
     payload = cbor2.dumps(payload)

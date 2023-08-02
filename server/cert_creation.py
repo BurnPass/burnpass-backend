@@ -32,10 +32,10 @@ def add_user_cert_an_sign(payload_dict):
     private_value, public_key_pem_headless = seperate_key(user_private_key)
     # add the user public key to the payload dict
     # upuk = user public key
-    payload_dict["upuk"] = public_key_pem_headless
+    #payload_dict["upuk"] = public_key_pem_headless
     payload = str(payload_dict).replace("'", '"')
     # sign the payload
-    cose = sign(payload)
+    cose = sign(payload,public_key_pem_headless)
     # add the private value after the cose message
     # PV = private value
     cose_and_private_value = b"PV:" + private_value + cose
