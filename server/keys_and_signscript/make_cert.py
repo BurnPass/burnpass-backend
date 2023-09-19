@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import datetime
 from base64 import b64encode
+
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 
@@ -10,9 +12,8 @@ def make_cert(folder):
         pemlines = file.readlines()
     with open(folder + "/dsc-worker.pem", "rb") as file:
         pem = file.read()
-    pemheadless = ""
-    for lines in pemlines[1:-1]:
-        pemheadless += lines[:-1]  # ohne zeilenumbruch
+    # Zeilen der PEM datei ohne Kopf und Fuß und ohne Zeilenumbruch
+    pemheadless = "".join([lines[:-1] for lines in pemlines[1:-1]])
 
     cert = x509.load_pem_x509_certificate(pem)
 
@@ -25,7 +26,7 @@ def make_cert(folder):
                  'rawData': pemheadless,
                  'signature': '',
                  'thumbprint': '',
-                 'timestamp': '2022-07-20T10:15:27+02:00'}  # aktuelle Zeit einfügen?
+                 'timestamp': datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()}
 
     certs = {"certificates": [dictentry]}
     return str(certs).replace("'", '"')
