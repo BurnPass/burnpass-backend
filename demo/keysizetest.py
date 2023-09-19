@@ -1,4 +1,3 @@
-import datetime
 # inspect für debug in der server konsole
 # IO um generiertes Bild nur im Arbeitsspeicher zu halten
 import io
@@ -23,12 +22,9 @@ from cose.keys.curves import P256
 from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpCurve
 from cose.keys.keytype import KtyEC2
 from cose.messages import Sign1Message
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ec
 
 # Flask-Json für json darstellung im browser
-from server.keys_and_signscript.certificate_util import gen_certificate
+from server.keys_and_signscript.certificate_util import *
 
 
 def gen_private_key():
@@ -40,6 +36,8 @@ def minimise_key(private_key):  # takes private key and
     public_key = private_key.public_key()
     public_key_pem = public_key.public_bytes(serialization.Encoding.PEM,
                                              serialization.PublicFormat.SubjectPublicKeyInfo)
+    print("=====")
+    print(public_key_pem)
     public_key_pem_headless = ("".join(public_key_pem.decode("ascii").splitlines()[1:-1])).encode()
     return private_value, public_key_pem_headless
 
@@ -187,5 +185,80 @@ def test():
         f.write(img_alt.read())
 
 
-test()
-compare_sizes()
+def compare_tes():
+    pem_kotlin = ("-----BEGIN PRIVATE KEY-----\n" +
+                  "ME0CAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEMzAxAgEBBCAkHTbb10xt5PW4acyO2DxT93xxgDuvLGYS69MbjqHDRqAKBggqhkjOPQMBBw==" +
+                  "\n-----END PRIVATE KEY-----\n")
+    pem_server = ("-----BEGIN PRIVATE KEY-----\n" +
+                  "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJB0229dMbeT1uGnM\njtg8U/d8cYA7ryxmEuvTG46hw0ahRANCAAQ9961ecxwB4y74+rNCFczbsEctIJ5g\nWLtKLnU7pBSNVzUx73ehShbKNPPLCSaswSGJ4bxUyadlgmhdk67ugUaf" +
+                  "\n-----END PRIVATE KEY-----\n")
+    kotlinkey = load_pem_private_key(pem_kotlin.encode(), password=None)
+    serverkey = load_pem_private_key(pem_server.encode(), password=None)
+    priv_num1 = (kotlinkey.private_numbers().private_value)
+    priv_num2 = (serverkey.private_numbers().private_value)
+    re_pem_kotlin = kotlinkey.private_bytes(encoding=serialization.Encoding.PEM,
+                                            format=serialization.PrivateFormat.PKCS8,
+                                            encryption_algorithm=serialization.NoEncryption())
+    re_pem_server = serverkey.private_bytes(encoding=serialization.Encoding.PEM,
+                                            format=serialization.PrivateFormat.PKCS8,
+                                            encryption_algorithm=serialization.NoEncryption())
+    # print(pem_kotlin)
+    # print(pem_server)
+    # print(re_pem_kotlin)
+    # print(re_pem_server)
+    print("priv value equal")
+    print(priv_num1 == priv_num2)
+    print("====compare curve====")
+    print(kotlinkey.curve.name)
+    print(kotlinkey.curve.key_size)
+    print(serverkey.curve.name)
+    print(serverkey.curve.key_size)
+    print("====compare public key====")
+    kotlin_public = kotlinkey.public_key()
+    server_public = serverkey.public_key()
+    print(kotlin_public.public_numbers().curve.name)
+    print(server_public.public_numbers().curve.name)
+    print(kotlin_public.public_numbers().curve.key_size)
+    print(server_public.public_numbers().curve.key_size)
+    print(kotlin_public.public_numbers().x)
+    print(server_public.public_numbers().x)
+    print(kotlin_public.public_numbers().x == server_public.public_numbers().x)
+    print(kotlin_public.public_numbers().y)
+    print(server_public.public_numbers().y)
+    print(kotlin_public.public_numbers().y == server_public.public_numbers().y)
+    print("===sign and verify test===")
+    algo = ec.ECDSA(hashes.SHA256())
+    signed = serverkey.sign("moin moin".encode(), algo)
+    try:
+        kotlin_public.verify(signed, "moin moin".encode(), algo)
+        print("verified")
+    except:
+        print("failed")
+
+
+def user_pk_and_cert():
+    csca_name = 'CN=National CSCA of Friesland/C=FR/'
+    user_name = "user"
+    user_privatek = ec.generate_private_key(ec.SECP256R1())
+    user_privatek_pem = user_privatek.private_bytes(encoding=serialization.Encoding.PEM,
+                                                    format=serialization.PrivateFormat.PKCS8,
+                                                    encryption_algorithm=serialization.NoEncryption())
+    user_publick = user_privatek.public_key()
+    ds_private_key = ec.generate_private_key(ec.SECP256R1())
+    user_cert = gen_certificate(user_name, csca_name, user_publick, ds_private_key, 3650)
+    user_cert_pem = user_cert.public_bytes(serialization.Encoding.PEM)
+    return user_privatek_pem, user_cert_pem
+
+
+def test311():
+    a, b = user_pk_and_cert()
+    print(getsizeof(a))
+    print(getsizeof(b))
+    print(getsizeof(
+        "HC1:6BFY70D90T9WJWG.FKY*4GO0B3O+*F X7%BSFBBL/0*70HS8FN08*CRL2WY0LSC:ESD97TK0F90KECTHGWJC0FD1M6AIA%G7X+AQB9746HS8$/5TW6746TW6I%6K/5TM8G:5T1B6H9 X8NX686A:6AJTAKIBSR6WM8TK4WJCT3EHS8XJC%+DXJCCWENF6OF64W5KF6.96%JC QE/IAYJC5LEW34U3ET7DXC9 QE-ED8%E.JCBECB1A-:8$966469L6OF6VX6Q$D.UDRYA 96NF6L/5SW6Y57KQEBJ09WEQDD+Q6TW6FA7C466KCN9E%961A6DL6FA7D46JPCT3E5JDOA7Q477465W5LB7..DX%DZJC0/DFOAF/D JC2/D1UAB$DVKELPCG/DXUCNB8HOAI3D8WEETAMY9.HA$PC5$CUZC$$5Y$527BF GKHQRX0K3L*QDYOCO+ADFVBQNLX7$3ED$6BR375C2GKMIU3:GCGB+%I9EU/IQ2LJTOG7NBEGJI13XB8%PE-VD.N19:DBOE/F5KFF"))
+
+
+# test()
+# compare_sizes()
+# compare_tes()
+test311()

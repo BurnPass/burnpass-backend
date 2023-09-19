@@ -31,8 +31,6 @@ def add_user_cert_an_sign(payload_dict):
     # seperate the key into its public and private component
     private_value, public_key_pem_headless = seperate_key(user_private_key)
     # add the user public key to the payload dict
-    # upuk = user public key
-    #payload_dict["upuk"] = public_key_pem_headless
     payload = str(payload_dict).replace("'", '"')
     # sign the payload
     cose = sign(payload,public_key_pem_headless)
@@ -45,7 +43,7 @@ def add_user_cert_an_sign(payload_dict):
 
 
 # QR-Image generation
-def generate_qrimage(cert_string: str):
+def generate_qrimage(cert_string):
     # generate matplotlib image
     image = qrcode.make(cert_string, error_correction=qrcode.constants.ERROR_CORRECT_Q)
 
