@@ -22,7 +22,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.utils import int_to_bytes
 
 
-def key_maker(pub):
+def key_maker(pub, given_kid_b64):
     x = 0
     if isinstance(pub, RSAPublicKey):
         x = CoseKey.from_dict(
@@ -42,7 +42,8 @@ def key_maker(pub):
                 EC2KpY: pub.public_numbers().y.to_bytes(32, byteorder="big")
             })
     else:
-        print(f"Skipping unexpected/unknown key type (keyid={kid_64}, {pub.__class__.__name__}).", file=sys.stderr)
+        print(f"Skipping unexpected/unknown key type (keyid={given_kid_b64}, {pub.__class__.__name__}).",
+              file=sys.stderr)
 
     return x
 
@@ -94,7 +95,7 @@ def verify(cin, url):
         keyfile = x509.load_pem_x509_certificate(bytes(x, "utf-8"))
     except:
         return f"KeyID is unknown (kid={given_kid_b64}) -- cannot verify."
-    key = key_maker(keyfile.public_key())  # kids[given_kid_b64]
+    key = key_maker(keyfile.public_key(), given_kid_b64)  # kids[given_kid_b64]
 
     decoded.key = key
     if not decoded.verify_signature():

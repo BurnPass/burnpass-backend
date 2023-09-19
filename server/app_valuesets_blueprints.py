@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 import inspect
 import json
+
 # requests um auf das offizielle Backend live zurückzugreifen
 import requests
+from flask import Blueprint
 # Flask-Json für json darstellung im browser
 from flask_json import as_json
+
 # config
 from config import *
-from flask import Blueprint
 
 app_valuesets_blueprint = Blueprint('app_valuesets_blueprint', __name__)
 

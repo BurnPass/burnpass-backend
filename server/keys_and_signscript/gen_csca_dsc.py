@@ -1,5 +1,6 @@
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
+
 from certificate_util import gen_certificate
 
 
@@ -18,8 +19,7 @@ def make_csca_dsc():
     for i in [1, 2, 3, 4, "worker"]:
         dsc_name = "/CN=DSC " + str(i) + " of Friesland/C=FR/"
         dsc_private_key = ec.generate_private_key(ec.SECP256R1())
-        dsc_public_key = dsc_private_key.public_key()
-        dsca_cert = gen_certificate(dsc_name, csca_name, dsc_public_key, csca_private_key, 1780)
+        dsca_cert = gen_certificate(dsc_name, csca_name, dsc_private_key.public_key(), csca_private_key, 1780)
         masterlist += (dsca_cert.public_bytes(serialization.Encoding.PEM))
         if i == "worker":
             with open("dsc-worker.key", "wb") as f:

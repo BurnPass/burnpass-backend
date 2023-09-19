@@ -1,15 +1,15 @@
 #!env python3.8
-import zlib
 import json
-import cbor2
+import zlib
 from datetime import datetime
 
+import cbor2
 from base45 import b45encode
 from cose.algorithms import Es256
-from cose.keys.curves import P256
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
+from cose.keys.curves import P256
+from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpCurve
 from cose.keys.keytype import KtyEC2
 from cose.messages import Sign1Message
 from cryptography import x509
@@ -73,10 +73,5 @@ def sign(payload, public_key_pem_headless):
     out = zlib.compress(out, 9)
     # And base45 encode the result
     #
-    # windows only
-    # if platform == "win32" : #bei fehlern auf linux auch die windows version benutzen
     out = b'BP1:' + b45encode(out).decode().encode('ascii')
-    # linux version für base45 version < 0.4.4
-    # else:
-    #   out = b'HC1:' + bytes(b45encode(out),"utf8").decode().encode('ASCII')
     return out

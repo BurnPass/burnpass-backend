@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 # dict with suburl:[onlineurl,content]
 urls = {"/trustList/DSC/": ["https://de.dscg.ubirch.com/trustList/DSC", None],

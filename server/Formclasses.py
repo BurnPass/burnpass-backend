@@ -1,15 +1,17 @@
 # verschiedene imports für die verschiedenen eingabefelder
+# datetime für das Datum bei der Dateneingabe für das Zertifikat
+from datetime import date
+# Randint für den UVCI
+from random import randint
+
 from flask_wtf import FlaskForm
-from wtforms.fields import DateField
-from wtforms import StringField, SubmitField, SelectField, IntegerField
-from wtforms.validators import DataRequired, NumberRange
 # transkription bei Namen für der Zertifikat. z.b. Gößing -> Gossing
 # eigentlich ä->ae, aber ich hab kein paket gefunden was die regeln vom "ICAO Doc 9303 Part 3" umsetzt
 from trans import trans
-# Randint für den UVCI
-from random import randint
-# datetime für das Datum bei der Dateneingabe für das Zertifikat
-from datetime import date
+from wtforms import StringField, SubmitField, SelectField, IntegerField
+from wtforms.fields import DateField
+from wtforms.validators import DataRequired, NumberRange
+
 # auswahl Impfprodukt,Typ und Hersteller
 from choices import choicelist_vaccines, choicelist_vaccine_types, choicelist_vaccine_auth_holder, choicelist_countries
 
