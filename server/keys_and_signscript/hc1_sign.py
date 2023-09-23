@@ -29,7 +29,7 @@ def sign(payload, public_key_pem_headless):
         -260: {
             1: payload,
         },
-        73: public_key_pem_headless,
+        8: public_key_pem_headless,
     }
     # convert to byte
     payload = cbor2.dumps(payload)
