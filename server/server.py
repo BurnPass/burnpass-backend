@@ -17,14 +17,16 @@ from config import *
 from keys_and_signscript.hc1_verify import verify
 # zertifikat mit existierenden publickeys erstellen und in die datenbank einfügen
 from keys_and_signscript.make_cert import make_cert, cert_to_db
+# generierung der private und public keys der CSCA und DS
+from keys_and_signscript.gen_csca_dsc import gen_csca_dsc
 
 # Erstelle die Public Key Zertifikat Datenbank aus den aktuellen Keys
-# fehlen die Keys wird darauf aufmerksam
+# fehlen die Keys werden diese generiert
 try:
     cert_to_db(make_cert("keys_and_signscript"), "keys_and_signscript")
 except:
-    print(" ! Please first generate Keys in the keys_and_signscript folder with gen_csca_dsc.py script ! ")
-    exit(-1)
+    gen_csca_dsc("keys_and_signscript/")
+    cert_to_db(make_cert("keys_and_signscript"), "keys_and_signscript")
 
 app = Flask(__name__)
 Bootstrap(app)

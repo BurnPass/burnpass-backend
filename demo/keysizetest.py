@@ -22,9 +22,10 @@ from cose.keys.curves import P256
 from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpCurve
 from cose.keys.keytype import KtyEC2
 from cose.messages import Sign1Message
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 # Flask-Json für json darstellung im browser
-from server.keys_and_signscript.certificate_util import *
+from server.keys_and_signscript.gen_csca_dsc import *
 
 
 def gen_private_key():
