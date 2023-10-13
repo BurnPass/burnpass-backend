@@ -85,5 +85,4 @@ def makepayload(formlist):
         ],
         "ver": "1.3.3.7"
     }
-    print(payload_dict)
     return payload_dict
