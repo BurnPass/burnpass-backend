@@ -8,12 +8,12 @@ from flask_wtf import FlaskForm
 # transkription bei Namen für der Zertifikat. z.b. Gößing -> Gossing
 # eigentlich ä->ae, aber ich hab kein paket gefunden was die regeln vom "ICAO Doc 9303 Part 3" umsetzt
 from trans import trans
-from wtforms import StringField, SubmitField, SelectField, IntegerField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields import DateField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired
 
 # auswahl Impfprodukt,Typ und Hersteller
-from choices import choicelist_vaccines, choicelist_vaccine_types, choicelist_vaccine_auth_holder, choicelist_countries
+from choices import choicelist_countries
 
 
 # Zertifikat Input Forms
@@ -31,41 +31,15 @@ class DateOfBirthForm(FlaskForm):
 
 
 class vaccinationDateForm(FlaskForm):
-    vdate = DateField('Tag der Impfung', default=date.today)
+    vdate = DateField('Tag der Brandschutzschulung', default=date.today)
 
 
 class LandwahlForm(FlaskForm):
     land = SelectField("Ausstellungsland", choices=choicelist_countries, validators=[DataRequired()])
 
 
-class diseaseAgentTargetedForm(FlaskForm):
-    dAT = SelectField("Krankheit oder Krankheitserreger", choices=[("840539006", "COVID-19")],
-                      validators=[DataRequired()])
-
-
-class ImpfstoffTypForm(FlaskForm):
-    vp = SelectField("Impfstoff Typ", choices=choicelist_vaccine_types, validators=[DataRequired()])
-
-
-class ImpfstoffNameForm(FlaskForm):
-    mp = SelectField("Impfstoff Produkt", choices=choicelist_vaccines, validators=[DataRequired()])
-
-
-class ImpfstoffHerstellerForm(FlaskForm):
-    ma = SelectField("Impfstoff Hersteller", choices=choicelist_vaccine_auth_holder, validators=[DataRequired()])
-
-
-class DNIntForm(FlaskForm):
-    number = IntegerField("Anzahl der vorgesehenen Impfungen in der Serie", default=1,
-                          validators=[DataRequired(), NumberRange(min=1)])
-
-
-class SDIntForm(FlaskForm):
-    number = IntegerField("Zahl der Impfung in der Serie", default=1, validators=[DataRequired(), NumberRange(min=1)])
-
-
 class AusstellerForm(FlaskForm):
-    aussteller = StringField("Zertifikatsausteller", validators=[DataRequired()], default="Robert Koch-Institut")
+    aussteller = StringField("Zertifikatsaussteller", validators=[DataRequired()], default="Institut für Brandschutz")
 
 
 def makeforms():
@@ -74,37 +48,25 @@ def makeforms():
     nnameform = NachnameForm()
     dobform = DateOfBirthForm()
     landform = LandwahlForm()
-    dATform = diseaseAgentTargetedForm()
-    impftypform = ImpfstoffTypForm()
-    impfnameform = ImpfstoffNameForm()
-    impfhersteller = ImpfstoffHerstellerForm()
-    dnform = DNIntForm()
-    sdform = SDIntForm()
     dtform = vaccinationDateForm()
     isform = AusstellerForm()
 
     # liste aller formulareinträge
-    formlist = [dobform, vnameform, nnameform, landform, dATform, impftypform, impfnameform, impfhersteller, dnform,
-                sdform, dtform, isform]
+    formlist = [dobform, vnameform, nnameform, landform, dtform, isform]
     return formlist
 
 
-# payload ersteller aus den Daten
+# payload Dict erstellen aus den Daten
 def makepayload(formlist):
     # siehe: Technical Specifications for EU Digital COVID Certificates JSON Schema Specification
     dob = str(formlist[0].dob.data)
     gn = str(formlist[1].vorname.data)
     fn = str(formlist[2].nachname.data)
     co = str(formlist[3].land.data)
-    tg = str(formlist[4].dAT.data)
-    vp = str(formlist[5].vp.data)
-    mp = str(formlist[6].mp.data)
-    ma = str(formlist[7].ma.data)
-    dn = formlist[8].number.data
-    sd = formlist[9].number.data
-    dt = str(formlist[10].vdate.data)
-    is_ = str(formlist[11].aussteller.data)  # "is" ist ein keyword und kann nicht verwendet werden
-    ci = str(randint(10000000000000000, 99999999999999999))
+    dt = str(formlist[4].vdate.data)
+    is_ = str(formlist[5].aussteller.data)  # "is" ist ein keyword und kann nicht verwendet werden
+    ci = str(randint(0, 9999999999999999))
+    ci = ci.zfill(16)
     payload_dict = {
         "dob": dob,
         "nam": {
@@ -117,16 +79,11 @@ def makepayload(formlist):
             {
                 "ci": ci,
                 "co": co,
-                "dn": dn,
                 "dt": dt,
                 "is": is_,
-                "ma": ma,
-                "mp": mp,
-                "sd": sd,
-                "tg": tg,
-                "vp": vp
             }
         ],
         "ver": "1.3.3.7"
     }
+    print(payload_dict)
     return payload_dict

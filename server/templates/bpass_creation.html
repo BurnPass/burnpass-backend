@@ -3,7 +3,7 @@
 {% block content %}
 <form class="col-md-12" method="post" role="form">
 <a href="/">return to Homepage</a> 
-<h1> Digitales Impfzertifikat Ausstellfomular</h1> 
+<h1> Formular für die Ausstellung des digitalen Brandschutzzertifikats</h1> 
 <div class="form-group">
 {{ vnameform.hidden_tag() }}
 {{ vnameform.vorname.label}}
@@ -22,37 +22,13 @@
 {{ landform.land(class="form-control")}}
 </div>
 <div class="form-group">
-{{ dATform.dAT.label}}
-{{ dATform.dAT(class="form-control")}}
-</div>
-<div class="form-group">
-{{ impftypform.vp.label}}
-{{ impftypform.vp(class="form-control")}}
-</div>
-<div class="form-group">
-{{ impfnameform.mp.label}}
-{{ impfnameform.mp(class="form-control")}}
-</div>
-<div class="form-group">
-{{ impfhersteller.ma.label}}
-{{ impfhersteller.ma(class="form-control")}}
-</div>
-<div class="form-group">
-{{ sdform.number.label}}
-{{ sdform.number(class="form-control")}}
-</div>
-<div class="form-group">
-{{ dnform.number.label}}
-{{ dnform.number(class="form-control")}}
-</div>
-<div class="form-group">
 {{ dtform.vdate.label}}
 {{ dtform.vdate(class="form-control")}}
 </div>
 <div class="form-group">
 {{ isform.aussteller.label}}
 {{ isform.aussteller(class="form-control")}}
- </div>
+</div>
 <div class="form-group">
 {{ vnameform.submit(class="btn btn-default") }}
 </div>

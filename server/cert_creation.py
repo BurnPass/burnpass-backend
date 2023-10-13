@@ -70,16 +70,11 @@ def create_digital_bpcert():
         return send_file(img, 'file.png', as_attachment=True,
                          download_name=f'BPCERT_{formlist[2].nachname.data}_{formlist[1].vorname.data}_{formlist[0].dob.data}.png')
     # Eingabemaske anzeigen
-    return render_template("hcert_creation.html",
+    return render_template("bpass_creation.html",
                            dobform=formlist[0],
                            vnameform=formlist[1],
                            nnameform=formlist[2],
                            landform=formlist[3],
-                           dATform=formlist[4],
-                           impftypform=formlist[5],
-                           impfnameform=formlist[6],
-                           impfhersteller=formlist[7],
-                           dnform=formlist[8],
-                           sdform=formlist[9],
-                           dtform=formlist[10],
-                           isform=formlist[11])
+                           dtform=formlist[4],
+                           isform=formlist[5],
+                           )
