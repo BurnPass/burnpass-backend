@@ -3,6 +3,7 @@
 import io
 
 import qrcode
+from PIL import ImageOps, ImageDraw, ImageFont
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from flask import Blueprint
@@ -46,7 +47,12 @@ def add_user_cert_an_sign(payload_dict):
 def generate_qrimage(cert_string):
     # generate matplotlib image
     image = qrcode.make(cert_string, error_correction=qrcode.constants.ERROR_CORRECT_Q)
-
+    # Add warning Text
+    image = ImageOps.expand(image, border=(0, 0, 0, round(image.size[1] * .2)), fill=1)
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype(font='arial', size=round(image.size[1] * .05))
+    text = "Do not share this QR-Code!\nContains the private key for\npersonal activation."
+    draw.multiline_text(xy=(round(image.size[0] * .05), round(image.size[1] * 0.83)), text=text, fill=0, font=font)
     # create PNG image in memory
     img = io.BytesIO()  # create file-like object in memory to save image without using disk
     image.save(img, format='png')  # save image in file-like object
