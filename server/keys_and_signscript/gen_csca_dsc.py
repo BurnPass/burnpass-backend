@@ -22,7 +22,7 @@ def gen_certificate(subj_name, issuer_name, subj_public_key, issuer_private_key,
 
 def gen_csca_dsc(folder=""):
     # CSCA certificate
-    csca_name = 'CN=National CSCA of Friesland/C=FR/'
+    csca_name = 'CN=National CSCA of Germany/C=FR/'
     csca_private_key = ec.generate_private_key(ec.SECP256R1())
     csca_public_key = csca_private_key.public_key()
     csca_cert = gen_certificate(csca_name, csca_name, csca_public_key, csca_private_key, 3650)
@@ -33,7 +33,7 @@ def gen_csca_dsc(folder=""):
     masterlist = b""
     # 1 2 3 4 werden nur exemplarisch verwendet um eine masterlist anzulegen
     for i in [1, 2, 3, 4, "worker"]:
-        dsc_name = "/CN=DSC " + str(i) + " of Friesland/C=FR/"
+        dsc_name = "/CN=DSC " + str(i) + " for fire protection/C=FR/"
         dsc_private_key = ec.generate_private_key(ec.SECP256R1())
         dsca_cert = gen_certificate(dsc_name, csca_name, dsc_private_key.public_key(), csca_private_key, 1780)
         masterlist += (dsca_cert.public_bytes(serialization.Encoding.PEM))

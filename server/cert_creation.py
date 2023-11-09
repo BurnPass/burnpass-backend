@@ -51,7 +51,7 @@ def generate_qrimage(cert_string):
     image = ImageOps.expand(image, border=(0, 0, 0, round(image.size[1] * .2)), fill=1)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font='arial', size=round(image.size[1] * .05))
-    text = "Do not share this QR-Code!\nContains the private key for\npersonal activation."
+    text = "Do not share this QR-Code!\nContains the private key for\npersonal activation only."
     draw.multiline_text(xy=(round(image.size[0] * .05), round(image.size[1] * 0.83)), text=text, fill=0, font=font)
     # create PNG image in memory
     img = io.BytesIO()  # create file-like object in memory to save image without using disk
